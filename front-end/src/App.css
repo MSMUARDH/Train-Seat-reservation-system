@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* updated color palette */
+/* Color Theme Swatches in Hex */
+.blue-Sky-1 {
+  color: #001F30;
+}
+
+.blue-Sky-2 {
+  color: #005078;
+}
+
+.blue-Sky-3 {
+  color: #008EB5;
+}
+
+.blue-Sky-4 {
+  color: #22CDD6;
+}
+
+.blue-Sky-5 {
+  color: #F7FFFE;
+}
+
+
+@layer components {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: theme('fontFamily.roboto') !important
+  }
+
+  label,
+  input {
+    font-family: theme('fontFamily.monts') !important;
+    font-weight: 500;
+  }
+
+  p,
+  span {
+    font-family: theme('fontFamily.monts') !important;
+  }
+
+  .btn-delete {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .login-title {
+    color: theme('colors.white') !important;
+    letter-spacing: theme('letterSpacing.wider') !important;
+    font-size: 7rem !important;
+  }
+
+  .login-title-mobile {
+    color: theme('colors.sky.800') !important;
+    letter-spacing: theme('letterSpacing.widest') !important;
+    font-size: 2.5rem !important;
+  }
+
+  .lg-login-title {
+    color: theme('colors.white') !important;
+    letter-spacing: theme('letterSpacing.wider') !important;
+    font-size: 4rem !important;
+  }
+
+  .xl-login-title {
+    color: theme('colors.white') !important;
+    letter-spacing: theme('letterSpacing.wider') !important;
+    font-size: 5rem !important;
+  }
+
+  .btn-delete:hover {
+    background-color: theme('colors.red.600') !important;
+  }
+
+  /* scrollbar */
+  /* width */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.sky.400');
+    border-radius: 5px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .booking-form-item {
+    margin-bottom: 0px !important;
+  }
+
+  .time-range-picker-popup .ant-picker-range-wrapper .ant-picker-panel-container .ant-picker-panel-layout div .ant-picker-footer ul li button {
+    background-color: theme('colors.sky.700') !important;
+    color: white !important;
+    box-shadow: none !important;
+  }
+
+
+  .seat-checkbox .ant-checkbox span {
+    border-color: theme('colors.sky.950') !important;
+  }
+
+  .seat-checkbox .ant-checkbox span:hover {
+    border-color: theme('colors.red.500') !important;
+  }
+
+  .seat-checkbox .ant-checkbox-checked span {
+    background-color: theme('colors.green.600') !important;
+    border-color: theme('colors.green.800') !important;
+  }
+
+  .seat-checkbox .ant-checkbox-disabled span {
+    border-color: theme('colors.red.500') !important;
+    background-color: theme('colors.red.200') !important;
+  }
+
+  .disabled-user-check .ant-checkbox span {
+    border-color: theme('colors.gray.500');
+    background-color: theme('colors.gray.200');
+  }
+
+  .payment-loader div div .ant-spin-text {
+    color: theme('colors.sky.700') !important;
+    font-weight: 600;
+    font-size: 1.2rem !important;
+    border: none !important;
+
+  }
+
+  .seat-booking-disable-btn {
+    background-color: theme('colors.gray.400') !important;
+    border-color: theme('colors.gray.900') !important;
+    color: theme('colors.gray.100') !important;
+    pointer-events: none;
+  }
+}
+
+#card:hover {
+  transform: rotateY(180deg);
+}
+
+#card>div:nth-child(1) {
+  transition-delay: 150ms;
+}
+
+#card:hover>div:nth-child(1) {
+  opacity: 0;
+  z-index: -1;
+}
+
+.custom-payment-input-width {
+  width: 50% !important;
+}
+
+.ant-picker-date-panel .ant-picker-cell:not(.ant-picker-cell-in-view) .ant-picker-cell-inner {
+  display: none !important;
+}
+
+.ant-picker-date-panel .ant-picker-cell:not(.ant-picker-cell-in-view) {
+  pointer-events: none !important;
+}
+
+.ant-picker-calendar-date {
+  background-color: theme('colors.sky.50') !important;
+  margin: 4px !important;
+}
+
+.ant-picker-calendar-date:hover {
+  background-color: theme('colors.sky.100') !important;
+}
+
+.ant-picker-calendar-date .ant-picker-calendar-date-value {
+  color: theme('colors.sky.800') !important;
+  font-size: theme('fontSize.base') !important;
+}
+
+.bg-login-custom {
+  background-image: url(./img/login-bg-effect.png) !important;
+}
+
+.map-1 {
+  background-image: url(./img/map.png) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  min-height: 16rem;
+}
