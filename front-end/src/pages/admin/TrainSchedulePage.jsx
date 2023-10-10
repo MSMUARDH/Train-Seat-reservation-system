@@ -10,11 +10,10 @@ const TrainSchedulePage = () => {
   const getScheduleDetails = async () => {
     try {
       const response = await axios.get(
-        // ! change the routes to get Schedule details
         "http://localhost:5000/api/admin/get-all-trainschedule"
       );
-      console.log(response);
-      // setData(response.data.data);
+      // console.log(response.data.data);
+      setData(response.data.data);
       // console.log(response);
     } catch (error) {
       console.log(error);

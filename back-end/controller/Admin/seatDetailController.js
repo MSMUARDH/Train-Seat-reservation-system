@@ -10,9 +10,11 @@ const addSeatDetail = async (req, res) => {
   try {
     const TotalSeats = SeatColumn * SeatRow;
 
+    // !ClassType Should be ClassType:ClassType (Dont change)
+
     const seatDetail = await SeatDeatil.create({
       TrainId,
-      ClassType,
+      ClassType: ClassType,
       SeatColumn,
       SeatRow,
       TotalSeats,

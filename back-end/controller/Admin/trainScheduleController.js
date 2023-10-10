@@ -54,11 +54,12 @@ const addTrainSchedule = async (req, res) => {
         success: true,
         data: trainschedule,
       });
+    } else {
+      return res.status(400).send({
+        message: "Train Schedule already added...",
+        success: false,
+      });
     }
-    return res.status(400).send({
-      message: "Train Schedule already added...",
-      success: false,
-    });
   } catch (error) {
     return res.status(400).send({
       message: error.message,
@@ -91,8 +92,6 @@ const addTrainSchedule = async (req, res) => {
 const getAllTrainSchedule = async (req, res) => {
   try {
     const trainSchedules = await TrainSchedule.find({});
-
-    let Alldata;
 
     if (trainSchedules != "") {
       // Create a formattedTrainSchedules array to store formatted data
@@ -130,31 +129,23 @@ const getAllTrainSchedule = async (req, res) => {
           JSON.stringify(schedule.ArrivalTime)
         );
 
-        const { TrainId, RouteId, EstimatedTime } = schedule;
+        // const { TrainId, RouteId, EstimatedTime } = schedule;
 
         return {
-          TrainId: TrainId,
-          RouteId: RouteId,
+          _id: schedule._id,
+          TrainId: schedule.TrainId,
+          RouteId: schedule.RouteId,
           Date: frmtdt,
           DepatureTime: formattedDepatureTime,
           ArrivalTime: formattedArrivalTime,
-          EstimatedTime: EstimatedTime,
+          EstimatedTime: schedule.EstimatedTime,
         };
-
-        // console.log(data);
-
-        // Now, you can send the formatted data to the client
-        // return res.status(200).send({
-        //   message: "Train Schedule provided successfully...",
-        //   success: true,
-        //   data: Alldata,
-        // });
       });
 
       return res.status(200).send({
         message: "Train Schedule provided successfully...",
         success: true,
-        data: Alldata,
+        data: formattedTrainSchedules,
       });
     } else {
       return res.status(404).send({
@@ -169,5 +160,49 @@ const getAllTrainSchedule = async (req, res) => {
     });
   }
 };
+
+// !on tesing
+// const getAllTrainSchedules = async (req, res) => {
+//   try {
+//     // Fetch all data from the document
+//     const allData = await TrainSchedule.find({}); // Modify this query as needed
+
+//     // Check if data was found
+//     if (allData.length > 0) {
+//       // Modify the data as needed
+//       const modifiedData = allData.map((item) => {
+//         return {
+//           _id: item._id,
+//           TrainId: item.TrainId,
+//           RouteId: item.RouteId,
+//           Date:,
+//           DepatureTime:,
+//           ArrivalTime:,
+//           EstimatedTime:item.EstimatedTime,
+
+//         };
+//       });
+
+//       // Send the modified data to the client
+//       return res.status(200).json({
+//         success: true,
+//         message: "Data retrieved and modified successfully",
+//         data: modifiedData,
+//       });
+//     } else {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No data found.",
+//         data: null,
+//       });
+//     }
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//       error: error.message,
+//     });
+//   }
+// };
 
 module.exports = { addTrainSchedule, getAllTrainSchedule };

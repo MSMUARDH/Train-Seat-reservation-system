@@ -4,7 +4,7 @@ import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
 
-const RouteDetailTable = (props) => {
+const PickupInfoTable = (props) => {
   const updateKeyInParent = () => {
     // Call the setKey function passed as a prop with the new value
     props.setKey(3); // Replace 'newKeyValue' with the value you want to set
@@ -12,19 +12,29 @@ const RouteDetailTable = (props) => {
 
   const navigate = useNavigate();
   const columns = [
+    // {
+    //   title: "Route Id",
+    //   dataIndex: "RouteId",
+    //   width: 40,
+    // },
     {
-      title: "TrainId",
-      dataIndex: "TrainId",
-      width: 40,
-    },
-    {
-      title: "From",
-      dataIndex: "From",
+      title: "Station",
+      dataIndex: "Station",
       width: 20,
     },
     {
-      title: "To",
-      dataIndex: "To",
+      title: "Time",
+      dataIndex: "Time",
+      width: 20,
+    },
+    {
+      title: "ClassType",
+      dataIndex: "ClassType",
+      width: 20,
+    },
+    {
+      title: "Fair",
+      dataIndex: "Fair",
       width: 20,
     },
 
@@ -59,43 +69,39 @@ const RouteDetailTable = (props) => {
           Update
         </Button>
       ),
-      width: 20,
-    },
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      render: (text, record) => (
-        <Button
-          onClick={() =>
-            navigate(`/admin/schedule-detail/${record.TrainId}/${record._id}`)
-          }
-        >
-          Add Shedule
-        </Button>
-      ),
       width: 40,
     },
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      render: (text, record) => (
-        <Button
-          // onClick={updateKeyInParent}
-          onClick={() =>
-            navigate(`/admin/pickup-info/${record.TrainId}/${record._id}`)
-          }
-        >
-          Add Pickup Info
-        </Button>
-      ),
-      width: 30,
-    },
+    // {
+    //   title: "Actions",
+    //   dataIndex: "actions",
+    //   render: (text, record) => (
+    //     <Button
+    //       onClick={() => navigate(`/admin/schedule-detail/${record._id}`)}
+    //     >
+    //       Add Shedule
+    //     </Button>
+    //   ),
+    //   width: 40,
+    // },
+    // {
+    //   title: "Actions",
+    //   dataIndex: "actions",
+    //   render: (text, record) => (
+    //     <Button
+    //       // onClick={updateKeyInParent}
+    //       onClick={() => navigate(`/admin/route-detail/${record._id}`)}
+    //     >
+    //       Add Route
+    //     </Button>
+    //   ),
+    //   width: 30,
+    // },
   ];
 
   return (
     <Table
       columns={columns}
-      dataSource={props.data}
+      dataSource={props.pickupInfo}
       pagination={{
         pageSize: 50,
       }}
@@ -106,14 +112,12 @@ const RouteDetailTable = (props) => {
     />
   );
 };
-export default RouteDetailTable;
+export default PickupInfoTable;
 
-// import React from 'react'
+// import React from "react";
 
-// const RouteDetailTable = () => {
-//   return (
-//     <div>RouteDetailTable</div>
-//   )
-// }
+// const PickupInfoTable = () => {
+//   return <div>PickupInfoTable</div>;
+// };
 
-// export default RouteDetailTable
+// export default PickupInfoTable;

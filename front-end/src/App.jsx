@@ -12,11 +12,8 @@ import { antThemeConfig } from "../antThemeConfig";
 import AppDataProvider from "./context/provider/AppDataProvider";
 import AuthProvider from "./context/provider/AuthProvider";
 
-
-
 // Redirect
 import HandleAuthRedirect from "./auth/HandleAuthRedirect";
-
 
 // Pages
 import Home from "./pages/Home";
@@ -27,6 +24,7 @@ import ClassDetailPage from "./pages/admin/ClassDetailPage";
 import RouteDetailPage from "./pages/admin/RouteDetailPage";
 import TrainScheduleTable from "./pages/admin/TrainSchedulePage";
 import TrainSchedulePage from "./pages/admin/TrainSchedulePage";
+import PickupInfoPage from "./pages/admin/PickupInfoPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -62,6 +60,12 @@ function App() {
           exact
           path="/admin/schedule-detail/:trainid/:routeid"
           element={<TrainSchedulePage />}
+        />
+
+        <Route
+          exact
+          path="/admin/pickup-info/:trainid/:routeid"
+          element={<PickupInfoPage />}
         />
 
         <Route path="*" element={<NotFound />} />

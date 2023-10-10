@@ -7,8 +7,6 @@ const {
   getTrainDetails,
 } = require("../controller/Admin/trainMasterController");
 
-const { addFairDetail } = require("../controller/Admin/fairDetailController");
-
 const {
   addRouteDetail,
   getAllRouteDetail,
@@ -30,9 +28,10 @@ const {
   getSingleTrainDetail,
 } = require("../controller/Admin/seatDetailController");
 
-const { addPickupInfo } = require("../controller/Admin/pickupInfoController");
-
-const { addPickupStand } = require("../controller/Admin/pickupstandController");
+const {
+  addPickupInfo,
+  getPickupInfoForaRoute,
+} = require("../controller/Admin/pickupInfoController");
 
 const { createPNRDetail } = require("../controller/Admin/PNRDetailController");
 
@@ -63,13 +62,11 @@ router.get("/get-route-details", getAllRouteDetail);
 router.post("/add-trainschedule/:trainid/:routeid", addTrainSchedule);
 router.get("/get-all-trainschedule", getAllTrainSchedule);
 
-router.post("/add-pickupstand", addPickupStand);
-router.post("/add-pickupinfo", addPickupInfo);
-router.post("/add-fairedetail", addFairDetail);
+router.post("/add-pickupinfo/:routeid", addPickupInfo);
+router.get("/get-pickupinfo/:routeid", getPickupInfoForaRoute);
 
 router.post("/create-booking", createBooking);
 router.post("/create-pnrdetail", createPNRDetail);
-
 router.delete("/remove-train", removeTrain);
 
 // ?Below route example for aggregation testing

@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const SeatDetailSchema = new mongoose.Schema({
   // * SeatDetailId
   TrainId: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
+
   ClassType: {
     type: String,
-    unique: true,
     required: true,
   },
   SeatColumn: {
@@ -38,7 +38,7 @@ const SeatDetailSchema = new mongoose.Schema({
   },
 });
 
-// Define a compound unique index for TrainId and ClassType
+//? Define a compound unique index for TrainId and ClassType
 SeatDetailSchema.index({ TrainId: 1, ClassType: 1 }, { unique: true });
 
 // const SeatDetailModel = mongoose.model("SeatDetail", SeatDetailSchema);

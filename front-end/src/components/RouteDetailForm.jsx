@@ -12,7 +12,6 @@ import {
   theme,
 } from "antd";
 import axios from "axios";
-import { useParams } from "react-router";
 import ClassDetailTable from "./ClassDetailTable";
 import RouteDetailTable from "./RouteDetailTable";
 const { Option } = Select;
@@ -32,7 +31,6 @@ const AdvancedSearchForm = ({ trainid }) => {
     // const count = expand ? 6 : 6;
 
     const stations = [
-      "Choose Station",
       "Aluthgama",
       "Ambalangoda",
       "Ahangama",
@@ -139,7 +137,7 @@ const AdvancedSearchForm = ({ trainid }) => {
                 message: "Select something!",
               },
             ]}
-            initialValue="Choose Station"
+            initialValue=""
           >
             <Select>
               {stations.map((station, index) => (
