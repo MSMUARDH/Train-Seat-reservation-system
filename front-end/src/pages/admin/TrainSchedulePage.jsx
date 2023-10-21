@@ -2,31 +2,44 @@ import React, { useEffect, useState } from "react";
 import ScheduleForm from "../../components/ScheduleForm";
 import { useParams } from "react-router";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getScheduleDetailByRoute,
+  getAllScheduleDetail,
+  createTrainSchedule,
+} from "../../features/Schedule/trainScheduleSlice";
 
 const TrainSchedulePage = () => {
   const { trainid, routeid } = useParams();
-  const [data, setData] = useState();
+  // const [data, setData] = useState();
+  // const { trainSchedules } = useSelector((state) => state.Scheduledetails);
+  // const dispatch = useDispatch();
 
-  const getScheduleDetails = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/admin/get-all-trainschedule"
-      );
-      // console.log(response.data.data);
-      setData(response.data.data);
-      // console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // useEffect(() => {
+  //   dispatch(getScheduleDetailByRoute(routeid));
+  // }, []);
 
-  useEffect(() => {
-    getScheduleDetails();
-  }, []);
+  // const getScheduleDetails = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:5000/api/admin/get-all-trainschedule"
+  //     );
+  //     // console.log(response.data.data);
+  //     setData(response.data.data);
+  //     // console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   return (
     <div>
       <h1>TrainSchedulePage</h1>
-      <ScheduleForm trainid={trainid} data={data} routeid={routeid} />
+      <ScheduleForm
+        // trainSchedules={trainSchedules}
+        trainid={trainid}
+        routeid={routeid}
+      />
     </div>
   );
 };

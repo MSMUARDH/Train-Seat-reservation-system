@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -12,11 +12,16 @@ import {
   theme,
 } from "antd";
 import axios from "axios";
-import ClassDetailTable from "./ClassDetailTable";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getSingleRouteDetailByTrain,
+  createRouteDetails,
+  getAllRoutedetail,
+} from "../features/Route/routeDetailSlice";
 import RouteDetailTable from "./RouteDetailTable";
 const { Option } = Select;
 const AdvancedSearchForm = ({ trainid }) => {
-  // const [trigger, setTrigger] = useState(false);
+  const dispatch = useDispatch();
 
   const { token } = theme.useToken();
   const [form] = Form.useForm();
@@ -163,19 +168,21 @@ const AdvancedSearchForm = ({ trainid }) => {
     } else {
       const data = { trainid, values };
 
-      try {
-        const response = await axios.post(
-          "http://localhost:5000/api/admin/add-route-detail",
-          data
-        );
+      dispatch(createRouteDetails(data));
+      dispatch(getAllRoutedetail(trainid));
+      // try {
+      //   const response = await axios.post(
+      //     "http://localhost:5000/api/admin/add-route-detail",
+      //     data
+      //   );
 
-        if (response.status == 200) {
-          form.resetFields();
-        }
-        console.log(response);
-      } catch (error) {
-        console.log(error.response.data.message);
-      }
+      //   if (response.status == 200) {
+      //     form.resetFields();
+      //   }
+      //   console.log(response);
+      // } catch (error) {
+      //   console.log(error.response.data.message);
+      // }
     }
   };
 
@@ -208,7 +215,14 @@ const AdvancedSearchForm = ({ trainid }) => {
     </Form>
   );
 };
-const RouteDetailForm = ({ trainid, data }) => {
+const RouteDetailForm = ({ trainid }) => {
+  const { routeDetails } = useSelector((state) => state.Routedetails);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getSingleRouteDetailByTrain(trainid));
+  }, []);
+
   const { token } = theme.useToken();
   const listStyle = {
     lineHeight: "200px",
@@ -222,7 +236,7 @@ const RouteDetailForm = ({ trainid, data }) => {
       <AdvancedSearchForm trainid={trainid} />
 
       <div style={listStyle}>
-        <RouteDetailTable data={data} />
+        <RouteDetailTable routeDetails={routeDetails} />
       </div>
     </>
   );

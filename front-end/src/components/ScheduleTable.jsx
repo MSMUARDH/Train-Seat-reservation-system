@@ -3,14 +3,16 @@ import { Button, Table } from "antd";
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getScheduleDetailByRoute,
+  getAllScheduleDetail,
+  deleteTrainSchedule,
+} from "../features/Schedule/trainScheduleSlice";
 
-const ScheduleTable = (props) => {
-  const updateKeyInParent = () => {
-    // Call the setKey function passed as a prop with the new value
-    props.setKey(3); // Replace 'newKeyValue' with the value you want to set
-  };
-
+const ScheduleTable = ({ trainSchedules }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const columns = [
     // {
     //   title: "Route Id",
@@ -43,11 +45,16 @@ const ScheduleTable = (props) => {
       dataIndex: "actions",
       render: (text, record) => (
         <Button
-          onClick={async () =>
-            await axios.delete(
-              `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
-            )
-          }
+          // onClick={async () =>
+          //   await axios.delete(
+          //     `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
+          //   )
+          // }
+
+          onClick={() => {
+            dispatch(deleteTrainSchedule(record._id));
+            dispatch(getScheduleDetailByRoute(record.RouteId));
+          }}
         >
           Delete
         </Button>
@@ -101,14 +108,15 @@ const ScheduleTable = (props) => {
   return (
     <Table
       columns={columns}
-      dataSource={props.data}
+      dataSource={trainSchedules}
       pagination={{
         pageSize: 50,
       }}
       scroll={{
         y: 350,
       }}
-      rowKey={(record) => record._id} // Replace "id" with the actual unique key property
+      key={(text, record) => record._id}
+      // rowKey={(text, record) => record._id} // Replace "id" with the actual unique key property
     />
   );
 };

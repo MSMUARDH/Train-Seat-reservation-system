@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Table } from "antd";
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
 
-const TrainDetailTable = (props) => {
-  const updateKeyInParent = () => {
-    // Call the setKey function passed as a prop with the new value
-    props.setKey(3); // Replace 'newKeyValue' with the value you want to set
-  };
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteTrain,
+  getAllTrain,
+  createTrain,
+} from "../features/Train/trainSlice";
 
+const TrainDetailTable = (prop) => {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   const columns = [
     {
       title: "TrainId",
@@ -37,11 +42,10 @@ const TrainDetailTable = (props) => {
       dataIndex: "actions",
       render: (text, record) => (
         <Button
-          onClick={async () =>
-            await axios.delete(
-              `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
-            )
-          }
+          onClick={() => {
+            dispatch(deleteTrain(record._id));
+            dispatch(getAllTrain());
+          }}
         >
           Delete
         </Button>
@@ -49,22 +53,6 @@ const TrainDetailTable = (props) => {
       width: 20,
     },
 
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      render: (text, record) => (
-        <Button
-          onClick={async () =>
-            await axios.delete(
-              `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
-            )
-          }
-        >
-          Update
-        </Button>
-      ),
-      width: 20,
-    },
     {
       title: "Actions",
       dataIndex: "actions",
@@ -91,27 +79,19 @@ const TrainDetailTable = (props) => {
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={props.data}
-      pagination={{
-        pageSize: 50,
-      }}
-      scroll={{
-        y: 350,
-      }}
-      rowKey={(record) => record._id} // Replace "id" with the actual unique key property
-    />
+    <>
+      <Table
+        columns={columns}
+        dataSource={prop.data}
+        pagination={{
+          pageSize: 50,
+        }}
+        scroll={{
+          y: 350,
+        }}
+        rowKey={(record) => record._id} // Replace "id" with the actual unique key property
+      />
+    </>
   );
 };
 export default TrainDetailTable;
-
-// import React from 'react'
-
-// const AdminTable = () => {
-//   return (
-//     <div>AdminTable</div>
-//   )
-// }
-
-// export default AdminTable

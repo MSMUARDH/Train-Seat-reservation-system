@@ -3,6 +3,12 @@ const SeatDeatil = require("../../model/SeatDetailModel");
 const addSeatDetail = async (req, res) => {
   const { ClassType } = req.body.values;
 
+  // console.log(req.body.values.SeatColumn);
+
+  // console.log(ClassType);
+
+  // console.log(req.body.trainid);
+
   const TrainId = req.body.trainid;
   const SeatColumn = parseInt(req.body.values.SeatColumn, 10); // 10 is the radix/base for parsing integers
   const SeatRow = parseInt(req.body.values.SeatRow, 10);
@@ -54,7 +60,49 @@ const getseatDetails = async (req, res) => {
   }
 };
 
-const getSingleTrainDetail = async (req, res) => {
+// !update
+const updateSeatDetails = async (req, res) => {};
+
+//!delete
+const deleteSeatDetails = async (req, res) => {
+  const { classid } = req.params;
+
+  console.log("class id", classid);
+
+  try {
+    const isSeatDetailExist = await SeatDeatil.findOne({
+      _id: classid,
+    });
+
+    console.log(isSeatDetailExist);
+
+    if (isSeatDetailExist != "") {
+      const deletedSeatDetails = await SeatDeatil.deleteMany({
+        _id: classid,
+      });
+
+      if (deletedSeatDetails.acknowledged) {
+        return res.status(200).send({
+          message: "Class detail deleted success...",
+          success: true,
+          data: isSeatDetailExist,
+        });
+      } else {
+        return res.status(400).send({
+          message: "something went wrong ",
+          success: false,
+        });
+      }
+    }
+  } catch (error) {
+    return res.status(400).send({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+const getSingleClassDetail = async (req, res) => {
   const TrainId = req.params.trainid;
   try {
     const seatDetails = await SeatDeatil.find({ TrainId: TrainId });
@@ -74,4 +122,10 @@ const getSingleTrainDetail = async (req, res) => {
   }
 };
 
-module.exports = { addSeatDetail, getseatDetails, getSingleTrainDetail };
+module.exports = {
+  addSeatDetail,
+  getseatDetails,
+  getSingleClassDetail,
+  updateSeatDetails,
+  deleteSeatDetails,
+};

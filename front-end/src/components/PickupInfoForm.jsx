@@ -19,8 +19,18 @@ import { DatePicker } from "antd";
 import PickupInfoTable from "./PickupInfoTable";
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
+
+import {
+  getAllPickupInfoByRoute,
+  deletePickupInfo,
+  createPickupInfoDetail,
+} from "../features/Pickupinfo/pickupinfoSlice";
+
+import { useDispatch, useSelector } from "react-redux";
+
 const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
   const [Time, setTime] = useState("");
+  const dispatch = useDispatch();
 
   const { token } = theme.useToken();
   const [form] = Form.useForm();
@@ -34,7 +44,14 @@ const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
   const getFields = () => {
     // const count = expand ? 6 : 6;
 
-    const fields = ["Station", "Time", "Class", "Fair"];
+    const fields = [
+      "Station",
+      "Time",
+      "Class",
+      "Fair",
+      "RouteOrder",
+      "SearchdrpdownTest",
+    ];
 
     const stations = [
       "Aluthgama",
@@ -63,8 +80,6 @@ const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
       "Galoya",
       "Gampaha",
       "Gampola",
-      "Habaraduwa",
-      "Habarana",
       "Hali Ela",
       "Haputhale",
       "Hatton",
@@ -96,7 +111,6 @@ const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
       "NAGOLLAGAMA",
       "Nanu Oya",
       "Nawalapitiya",
-      "Nawalapitya",
       "Nugegoda",
       "Omantha",
       "Pallai",
@@ -108,13 +122,10 @@ const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
       "Ragama",
       "Rambukkana",
       "Rathmalana",
-      "Return Colombo",
-      "Return Waga",
       "Talaimannar Pier",
       "Thambalagamuwa",
       "Thambuththegama",
       "Wellawatte",
-      "Thandikulam",
       "Trincomalee",
       "Unawatuna",
       "Valachchena",
@@ -143,13 +154,28 @@ const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
               ]}
               initialValue=""
             >
-              <Select placeholder="">
-                {stations.map((station, index) => (
-                  <Option value={station} key={index}>
-                    {station}{" "}
-                  </Option>
-                ))}
-              </Select>
+              <Select
+                showSearch
+                style={
+                  {
+                    // width: 200,
+                  }
+                }
+                placeholder="Search to Select"
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "").toLocaleLowerCase().includes(input)
+                }
+                filterSort={(optionA, optionB) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
+                options={stations.map((station, index) => ({
+                  value: `${index}-${station}`, // Start index from 1
+                  label: station,
+                }))}
+              />
             </Form.Item>
           )}
           {i == 1 && (
@@ -164,6 +190,9 @@ const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
               ]}
             >
               <TimePicker
+                style={{
+                  width: 200,
+                }}
                 onChange={(e) => setTime(`${e.$H}:${e.$m}`)}
                 format="HH:mm"
               />
@@ -204,6 +233,21 @@ const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
               <Input type="number" placeholder="placeholder" />
             </Form.Item>
           )}
+
+          {i == 4 && (
+            <Form.Item
+              name={fields[i]}
+              label={fields[i]}
+              rules={[
+                {
+                  required: true,
+                  message: "this field is required",
+                },
+              ]}
+            >
+              <Input type="number" placeholder="placeholder" />
+            </Form.Item>
+          )}
         </Col>
       ); //array end
     } //end
@@ -211,37 +255,56 @@ const AdvancedSearchForm = ({ trainid, routeid, classDetails }) => {
   };
 
   const postPickupInfo = async (values) => {
-    const { Station, Fair } = values;
+    console.log("values", values);
+
+    const { Fair, RouteOrder } = values;
+
+    // ! split id and the station
+    const stationString = values.Station;
+    const partsStation = stationString.split("-");
+    const Station = partsStation[1].trim();
 
     const inputString = values.Class;
-    const parts = inputString.split("-"); // Split the string by hyphen
+    const partsClass = inputString.split("-"); // Split the string by hyphen
 
-    const part1 = parts[0].trim();
-    const part2 = parts[1].trim(); // Get the part after the hyphen and trim any leading/trailing spaces
+    const part1 = partsClass[0].trim();
+    const part2 = partsClass[1].trim(); // Get the part after the hyphen and trim any leading/trailing spaces
 
     const seatDetailIdPart = part1;
     const classTypePart = part2;
 
-    // console.log(classIdPart, classTypePart);
+    const data = {
+      Station,
+      Time,
+      seatDetailIdPart,
+      classTypePart,
+      Fair,
+      routeid,
+      RouteOrder,
+    };
 
-    const data = { Station, Time, seatDetailIdPart, classTypePart, Fair };
+    // console.log("data", data);
 
-    console.log(data);
+    dispatch(createPickupInfoDetail(data));
+
+    setTimeout(() => {
+      dispatch(getAllPickupInfoByRoute(routeid));
+    }, 1500);
 
     // console.log(classDetailId, classType);
-    try {
-      const response = await axios.post(
-        `http://localhost:5000/api/admin/add-pickupinfo/${routeid}`,
-        data
-      );
+    // try {
+    //   const response = await axios.post(
+    //     `http://localhost:5000/api/admin/add-pickupinfo/${routeid}`,
+    //     data
+    //   );
 
-      if (response.status == 200) {
-        form.resetFields();
-      }
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    //   if (response.status == 200) {
+    //     form.resetFields();
+    //   }
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -299,13 +362,3 @@ const PickupInfoForm = ({ trainid, routeid, classDetails, pickupInfo }) => {
   );
 };
 export default PickupInfoForm;
-
-// import React from 'react'
-
-// const PickupInfoForm = () => {
-//   return (
-//     <div>PickupInfoForm</div>
-//   )
-// }
-
-// export default PickupInfoForm

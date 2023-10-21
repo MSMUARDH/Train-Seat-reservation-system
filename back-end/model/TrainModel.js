@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const TrainSchedule = require("./ScheduleMasterModel");
 const RouteDetail = require("./RouteDetailModel");
+// ! newly added plug in on test
+const autopopulate = require("mongoose-autopopulate");
 
 const TrainSchema = new mongoose.Schema({
   // * TrainId

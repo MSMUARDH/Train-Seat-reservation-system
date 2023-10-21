@@ -58,4 +58,11 @@ const removeTrain = async (req, res) => {
   });
 };
 
-module.exports = { addTrainDetails, getTrainDetails, removeTrain };
+const updateTranDetail = async (req, res) => {};
+
+module.exports = {
+  addTrainDetails,
+  getTrainDetails,
+  updateTranDetail,
+  removeTrain,
+};

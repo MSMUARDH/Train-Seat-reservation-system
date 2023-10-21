@@ -6,7 +6,10 @@ import {
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Layout, Menu, theme } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllTrain, createTrain } from "../../features/Train/trainSlice";
+
 import axios from "axios";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -14,6 +17,10 @@ const { Header, Content, Footer, Sider } = Layout;
 // components
 import TrainDetailTable from "../../components/TrainDetailTable";
 import TrainForm from "../../components/TrainForm";
+import TrainDetailPage from "./TrainDetailPage";
+import AllClassDetailPage from "./AllClassDetailPage";
+import AllRouteDetailPage from "./AllRouteDetailPage";
+import AllScheduleDetailPage from "./AllScheduleDetailPage";
 
 function getItem(label, key, icon, children) {
   return {
@@ -27,10 +34,10 @@ const items = [
   //   getItem("Train Table ", "1", <PieChartOutlined />),
   //   getItem("Option 2", "2", <DesktopOutlined />),
   getItem("Train", "sub1", <UserOutlined />, [
-    getItem("Show Table", "1"),
-    getItem("Create Train", "2"),
-    getItem("Route Details", "3"),
-    getItem("Add Schedule", "4"),
+    getItem("Train Table", "1"),
+    getItem("All Classdetails", "2"),
+    getItem("All Route Details", "3"),
+    getItem("All  Schedule Details", "4"),
   ]),
   getItem("Team", "sub2", <TeamOutlined />, [
     getItem("Team 1", "5"),
@@ -39,38 +46,41 @@ const items = [
   getItem("Files", "9", <FileOutlined />),
 ];
 const AdminHome = () => {
-  const [childData, setChildData] = useState("");
+  const { trains } = useSelector((state) => state.Trains);
+  // const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  //! Function to receive data from the child component
-  const receiveDataFromChild = (data) => {
-    setChildData(data);
-  };
+  // const [childData, setChildData] = useState("");
+
+  // //! Function to receive data from the child component
+  // const receiveDataFromChild = (data) => {
+  //   setChildData(data);
+  // };
 
   const [key, setKey] = useState();
   const [collapsed, setCollapsed] = useState(false);
   const [data, setData] = useState([]);
 
-  const getTrainDetails = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/admin/get-all-train-detail"
-      );
+  // const getTrainDetails = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:5000/api/admin/get-all-train-detail"
+  //     );
 
-      setData(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setData(response.data.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  // getTrainDetails();
-
-  useEffect(() => {
-    getTrainDetails();
-  }, [key]);
+  // useEffect(() => {
+  //   dispatch(getAllTrain());
+  // }, [key]);
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   return (
     <Layout
       style={{
@@ -103,14 +113,6 @@ const AdminHome = () => {
             margin: "0 16px",
           }}
         >
-          {/* <Breadcrumb
-            style={{
-              margin: "16px 0",
-            }}
-          >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb> */}
           <div
             style={{
               padding: 24,
@@ -119,15 +121,13 @@ const AdminHome = () => {
             }}
           >
             {/* //!testing child to parent */}
-            {key == 1 && (
-              <TrainDetailTable
-                setKey={setKey}
-                // sendDataToParent={receiveDataFromChild}
-                data={data}
-              />
-            )}
-            {key == 2 && <TrainForm />}
-            {key == 3 && <h1>this is key 3</h1>}
+            {/* {key == 1 && <TrainDetailTable setKey={setKey} trains={trains} />} */}
+
+            {key == 1 && <TrainDetailPage />}
+            {/* {key == 2 && <TrainForm />} */}
+            {key == 2 && <AllClassDetailPage />}
+            {key == 3 && <AllRouteDetailPage />}
+            {key == 4 && <AllScheduleDetailPage />}
           </div>
         </Content>
         <Footer

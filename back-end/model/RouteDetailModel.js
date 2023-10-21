@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const autopopulate = require("mongoose-autopopulate");
 
 //* RouteID(Primary)
 //  Origin
@@ -8,7 +9,14 @@ const mongoose = require("mongoose");
 
 const RouteDetailSchema = new mongoose.Schema({
   // * RouteID
-  TrainId: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
+  TrainId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Train",
+    // autopopulate: {
+    //   model: "Train",
+    //   strictPopulate: false,
+    // },
+  },
   From: {
     type: String,
     required: true,
@@ -18,5 +26,7 @@ const RouteDetailSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+RouteDetailSchema.plugin(autopopulate);
 
 module.exports = mongoose.model("RouteDetail", RouteDetailSchema);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -13,10 +13,17 @@ import {
 } from "antd";
 import axios from "axios";
 import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllClassDetail,
+  getSingleclassDetailByTrain,
+  createClassDetails,
+} from "../features/ClassDetail/classdetailSlice";
 import ClassDetailTable from "./ClassDetailTable";
 const { Option } = Select;
 const AdvancedSearchForm = ({ trainid }) => {
   // const [trigger, setTrigger] = useState(false);
+  const dispatch = useDispatch();
 
   const { token } = theme.useToken();
   const [form] = Form.useForm();
@@ -79,19 +86,21 @@ const AdvancedSearchForm = ({ trainid }) => {
 
     const data = { trainid, values };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/admin/add-seatdetails",
-        data
-      );
+    dispatch(createClassDetails(data));
 
-      if (response.status == 200) {
-        form.resetFields();
-      }
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const response = await axios.post(
+    //     "http://localhost:5000/api/admin/add-seatdetails",
+    //     data
+    //   );
+
+    //   if (response.status == 200) {
+    //     form.resetFields();
+    //   }
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -124,6 +133,13 @@ const AdvancedSearchForm = ({ trainid }) => {
   );
 };
 const ClassDetailForm = ({ trainid, data }) => {
+  const { classdetails } = useSelector((state) => state.Classdetails);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getSingleclassDetailByTrain(trainid));
+  }, []);
+
   const { token } = theme.useToken();
   const listStyle = {
     lineHeight: "200px",
@@ -137,7 +153,7 @@ const ClassDetailForm = ({ trainid, data }) => {
       <AdvancedSearchForm trainid={trainid} />
 
       <div style={listStyle}>
-        <ClassDetailTable data={data} />
+        <ClassDetailTable classdetails={classdetails} />
       </div>
     </>
   );

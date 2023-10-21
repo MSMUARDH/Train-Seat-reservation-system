@@ -25,14 +25,27 @@ import RouteDetailPage from "./pages/admin/RouteDetailPage";
 import TrainScheduleTable from "./pages/admin/TrainSchedulePage";
 import TrainSchedulePage from "./pages/admin/TrainSchedulePage";
 import PickupInfoPage from "./pages/admin/PickupInfoPage";
+import AvailabilityPage from "./pages/User/AvailabilityPage";
+import HomePage from "./pages/User/HomePage";
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
         <Route element={<HandleAuthRedirect />}>
-          <Route path="/" element={<Home />} errorElement={<Error />} />
+          {/* <Route
+            path="/user/home"
+            element={<HomePage />}
+            errorElement={<Error />}
+          /> */}
         </Route>
+
+        <Route
+          path="/user/home"
+          element={<HomePage />}
+          errorElement={<Error />}
+        />
+
         <Route path="/admin" element={<AdminHome />} errorElement={<Error />} />
 
         {/* <Route element={<HandleAuthRedirect />}>
@@ -67,6 +80,15 @@ function App() {
           path="/admin/pickup-info/:trainid/:routeid"
           element={<PickupInfoPage />}
         />
+
+        <Route
+          exact
+          path="/user/check-train-availability"
+          element={<AvailabilityPage />}
+        />
+
+        
+        
 
         <Route path="*" element={<NotFound />} />
       </Route>

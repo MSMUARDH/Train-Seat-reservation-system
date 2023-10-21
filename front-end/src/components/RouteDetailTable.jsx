@@ -4,11 +4,17 @@ import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
 
-const RouteDetailTable = (props) => {
-  const updateKeyInParent = () => {
-    // Call the setKey function passed as a prop with the new value
-    props.setKey(3); // Replace 'newKeyValue' with the value you want to set
-  };
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getSingleRouteDetailByTrain,
+  createRouteDetails,
+  deleteRouteDetail,
+} from "../features/Route/routeDetailSlice";
+
+const RouteDetailTable = ({ routeDetails }) => {
+  console.log("Route Details", routeDetails);
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const columns = [
@@ -33,11 +39,16 @@ const RouteDetailTable = (props) => {
       dataIndex: "actions",
       render: (text, record) => (
         <Button
-          onClick={async () =>
-            await axios.delete(
-              `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
-            )
-          }
+          // onClick={async () =>
+          //   await axios.delete(
+          //     `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
+          //   )
+          // }
+
+          onClick={() => {
+            dispatch(deleteRouteDetail(record.TrainId));
+            dispatch(getSingleRouteDetailByTrain(record.TrainId));
+          }}
         >
           Delete
         </Button>
@@ -95,25 +106,16 @@ const RouteDetailTable = (props) => {
   return (
     <Table
       columns={columns}
-      dataSource={props.data}
+      dataSource={routeDetails}
       pagination={{
         pageSize: 50,
       }}
       scroll={{
         y: 350,
       }}
-      rowKey={(record) => record._id} // Replace "id" with the actual unique key property
+      key={(text, record) => record._id}
+      rowKey={(text, record) => record._id} // Replace "id" with the actual unique key property
     />
   );
 };
 export default RouteDetailTable;
-
-// import React from 'react'
-
-// const RouteDetailTable = () => {
-//   return (
-//     <div>RouteDetailTable</div>
-//   )
-// }
-
-// export default RouteDetailTable

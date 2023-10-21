@@ -49,11 +49,81 @@ const addTrainSchedule = async (req, res) => {
         ArrivalTime: validatedarrivalTime,
         EstimatedTime: EstimatedDuration,
       });
-      return res.status(200).send({
-        message: "Train Schedule created successfully...",
-        success: true,
-        data: trainschedule,
+
+      // ! new code below
+      const trainSchedules = await TrainSchedule.find({
+        RouteId: trainschedule.RouteId,
       });
+
+      if (trainSchedules != "") {
+        // Create a formattedTrainSchedules array to store formatted data
+        const formattedTrainSchedules = trainSchedules.map((schedule) => {
+          // Format date and time here
+
+          // console.log(schedule.Date);
+          const fotmattedDate = new Date(schedule.Date);
+
+          // console.log(fotmattedDate.getDate());
+          // console.log(fotmattedDate.getMonth() + 1);
+          // console.log(fotmattedDate.getUTCFullYear());
+
+          const frmtdt = `${fotmattedDate.getDate()}-${
+            fotmattedDate.getMonth() + 1
+          }-${fotmattedDate.getUTCFullYear()}`;
+
+          // console.log(frmtdt);
+
+          // console.log(schedule.DepatureTime);
+          // console.log(schedule.ArrivalTime);
+
+          const formatTime = (dateTimeString) => {
+            const startIndex = dateTimeString.indexOf("T") + 1;
+            const endIndex = dateTimeString.indexOf(".");
+
+            const timePart = dateTimeString.substring(startIndex, endIndex);
+            return timePart.toString();
+          };
+
+          const formattedDepatureTime = formatTime(
+            JSON.stringify(schedule.DepatureTime)
+          );
+          const formattedArrivalTime = formatTime(
+            JSON.stringify(schedule.ArrivalTime)
+          );
+
+          // const { TrainId, RouteId, EstimatedTime } = schedule;
+
+          return {
+            _id: schedule._id,
+            TrainId: schedule.TrainId,
+            RouteId: schedule.RouteId,
+            Date: frmtdt,
+            DepatureTime: formattedDepatureTime,
+            ArrivalTime: formattedArrivalTime,
+            EstimatedTime: schedule.EstimatedTime,
+          };
+        });
+
+        console.log("formated train shedule", formattedTrainSchedules);
+
+        return res.status(200).send({
+          message: "Train Schedule provided successfully...",
+          success: true,
+          data: formattedTrainSchedules,
+        });
+      } else {
+        return res.status(404).send({
+          message: "No train schedules found.",
+          success: false,
+        });
+      }
+
+      // ! old return
+      // return res.status(200).send({
+      //   message: "Train Schedule created successfully...",
+      //   success: true,
+      //   data: trainschedule,
+      // });
     } else {
       return res.status(400).send({
         message: "Train Schedule already added...",
@@ -89,6 +159,92 @@ const addTrainSchedule = async (req, res) => {
 //   }
 // };
 
+const getScheduleDetailByRoute = async (req, res) => {
+  const routeid = req.params.routeid;
+  try {
+    const trainScheduleDetail = await TrainSchedule.find({ RouteId: routeid });
+
+    if (trainScheduleDetail) {
+      //! new code
+      const trainSchedules = await TrainSchedule.find({ RouteId: routeid });
+
+      if (trainSchedules != "") {
+        // Create a formattedTrainSchedules array to store formatted data
+        const formattedTrainSchedules = trainSchedules.map((schedule) => {
+          // Format date and time here
+
+          // console.log(schedule.Date);
+          const fotmattedDate = new Date(schedule.Date);
+
+          // console.log(fotmattedDate.getDate());
+          // console.log(fotmattedDate.getMonth() + 1);
+          // console.log(fotmattedDate.getUTCFullYear());
+
+          const frmtdt = `${fotmattedDate.getDate()}-${
+            fotmattedDate.getMonth() + 1
+          }-${fotmattedDate.getUTCFullYear()}`;
+
+          // console.log(frmtdt);
+
+          // console.log(schedule.DepatureTime);
+          // console.log(schedule.ArrivalTime);
+
+          const formatTime = (dateTimeString) => {
+            const startIndex = dateTimeString.indexOf("T") + 1;
+            const endIndex = dateTimeString.indexOf(".");
+
+            const timePart = dateTimeString.substring(startIndex, endIndex);
+            return timePart.toString();
+          };
+
+          const formattedDepatureTime = formatTime(
+            JSON.stringify(schedule.DepatureTime)
+          );
+          const formattedArrivalTime = formatTime(
+            JSON.stringify(schedule.ArrivalTime)
+          );
+
+          // const { TrainId, RouteId, EstimatedTime } = schedule;
+
+          return {
+            _id: schedule._id,
+            TrainId: schedule.TrainId,
+            RouteId: schedule.RouteId,
+            Date: frmtdt,
+            DepatureTime: formattedDepatureTime,
+            ArrivalTime: formattedArrivalTime,
+            EstimatedTime: schedule.EstimatedTime,
+          };
+        });
+
+        return res.status(200).send({
+          message: "Train Schedule provided successfully...",
+          success: true,
+          data: formattedTrainSchedules,
+        });
+      } else {
+        return res.status(404).send({
+          message: "No train schedules found.",
+          success: false,
+          data: "",
+        });
+      }
+
+      // !old return
+      // return res.status(200).send({
+      //   message: "Seat details of this train provided successfully...",
+      //   success: true,
+      //   data: trainScheduleDetail,
+      // });
+    }
+  } catch (error) {
+    return res.status(400).send({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
 const getAllTrainSchedule = async (req, res) => {
   try {
     const trainSchedules = await TrainSchedule.find({});
@@ -98,18 +254,18 @@ const getAllTrainSchedule = async (req, res) => {
       const formattedTrainSchedules = trainSchedules.map((schedule) => {
         // Format date and time here
 
-        console.log(schedule.Date);
+        // console.log(schedule.Date);
         const fotmattedDate = new Date(schedule.Date);
 
-        console.log(fotmattedDate.getDate());
-        console.log(fotmattedDate.getMonth() + 1);
-        console.log(fotmattedDate.getUTCFullYear());
+        // console.log(fotmattedDate.getDate());
+        // console.log(fotmattedDate.getMonth() + 1);
+        // console.log(fotmattedDate.getUTCFullYear());
 
         const frmtdt = `${fotmattedDate.getDate()}-${
           fotmattedDate.getMonth() + 1
         }-${fotmattedDate.getUTCFullYear()}`;
 
-        console.log(frmtdt);
+        // console.log(frmtdt);
 
         // console.log(schedule.DepatureTime);
         // console.log(schedule.ArrivalTime);
@@ -205,4 +361,52 @@ const getAllTrainSchedule = async (req, res) => {
 //   }
 // };
 
-module.exports = { addTrainSchedule, getAllTrainSchedule };
+//! need to implment
+const updateTrainSchedule = async (req, res) => {};
+
+//! need to implment
+const deleteTrainSchedule = async (req, res) => {
+  const { scheduleid } = req.params;
+
+  console.log("Shedule id", scheduleid);
+
+  try {
+    const isTrainScheduleExist = await TrainSchedule.findOne({
+      _id: scheduleid,
+    });
+
+    console.log("delete route", isTrainScheduleExist);
+
+    if (isTrainScheduleExist != "") {
+      const deletedScheduleDetails = await TrainSchedule.deleteMany({
+        _id: scheduleid,
+      });
+
+      if (deletedScheduleDetails.acknowledged) {
+        return res.status(200).send({
+          message: "Shedule detail deleted success...",
+          success: true,
+          data: isTrainScheduleExist,
+        });
+      } else {
+        return res.status(400).send({
+          message: "something went wrong ",
+          success: false,
+        });
+      }
+    }
+  } catch (error) {
+    return res.status(400).send({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+module.exports = {
+  addTrainSchedule,
+  getAllTrainSchedule,
+  updateTrainSchedule,
+  deleteTrainSchedule,
+  getScheduleDetailByRoute,
+};

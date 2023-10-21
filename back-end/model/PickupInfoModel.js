@@ -15,6 +15,7 @@ const PickupStandInfoSchema = new mongoose.Schema({
       message: "Invalid RouteId. RouteDetail not found.",
     },
   },
+
   Station: {
     type: String,
     required: true,
@@ -33,6 +34,11 @@ const PickupStandInfoSchema = new mongoose.Schema({
     required: true,
   },
   Fair: {
+    type: Number,
+    required: true,
+  },
+  // ! newly added
+  RouteOrder: {
     type: Number,
     required: true,
   },

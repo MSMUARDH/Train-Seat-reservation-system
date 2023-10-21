@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -20,7 +20,14 @@ import { DatePicker } from "antd";
 import ScheduleTable from "./ScheduleTable";
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getScheduleDetailByRoute,
+  createTrainSchedule,
+} from "../features/Schedule/trainScheduleSlice";
 const AdvancedSearchForm = ({ trainid, routeid }) => {
+  // const { trainSchedules } = useSelector((state) => state.Scheduledetails);
+  const dispatch = useDispatch();
   const [date, setDate] = useState("");
   const [depatureTime, setDepatureTime] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
@@ -155,37 +162,38 @@ const AdvancedSearchForm = ({ trainid, routeid }) => {
 
   const postSeatDetails = async (values) => {
     const { EstimatedDuration, Status, DelayReason } = values;
-    console.log(
-      "Received values of form: ",
-      EstimatedDuration,
-      date,
-      depatureTime,
-      arrivalTime
-    );
 
     const data = {
       trainid,
+      routeid,
       EstimatedDuration,
       date,
       depatureTime,
       arrivalTime,
     };
 
+    console.log("Received from shedule form: ", data);
+
+    dispatch(createTrainSchedule(data));
+    setTimeout(() => {
+      dispatch(getScheduleDetailByRoute(routeid));
+    }, 1500);
+
     // trainid, routeid
 
-    try {
-      const response = await axios.post(
-        `http://localhost:5000/api/admin/add-trainschedule/${trainid}/${routeid}`,
-        data
-      );
+    // try {
+    //   const response = await axios.post(
+    //     `http://localhost:5000/api/admin/add-trainschedule/${trainid}/${routeid}`,
+    //     data
+    //   );
 
-      if (response.status == 200) {
-        form.resetFields();
-      }
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    //   if (response.status == 200) {
+    //     form.resetFields();
+    //   }
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -217,8 +225,13 @@ const AdvancedSearchForm = ({ trainid, routeid }) => {
     </Form>
   );
 };
-const ScheduleForm = ({ trainid, routeid, data }) => {
-  //   console.log(trainid, routeid);
+const ScheduleForm = ({ trainid, routeid }) => {
+  const { trainSchedules } = useSelector((state) => state.Scheduledetails);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getScheduleDetailByRoute(routeid));
+  }, []);
 
   const { token } = theme.useToken();
   const listStyle = {
@@ -233,7 +246,7 @@ const ScheduleForm = ({ trainid, routeid, data }) => {
       <AdvancedSearchForm trainid={trainid} routeid={routeid} />
 
       <div style={listStyle}>
-        <ScheduleTable data={data} />
+        <ScheduleTable trainSchedules={trainSchedules} />
       </div>
     </>
   );

@@ -6,6 +6,10 @@ const addRouteDetail = async (req, res) => {
   const { From, To } = req.body.values;
   const TrainId = req.body.trainid;
 
+  // console.log(From, To);
+  // console.log(TrainId);
+  // console.log(req.body);
+
   try {
     if (mongoose.Types.ObjectId.isValid(TrainId)) {
       console.log("Valid ObjectId:", TrainId);
@@ -37,6 +41,9 @@ const addRouteDetail = async (req, res) => {
 
       const savedOriginalRoute = await originalRoute.save();
       const savedReverseRoute = await reverseRoute.save();
+
+
+
       return res.status(200).send({
         message: "Route detail created successfully...",
         success: true,
@@ -45,6 +52,8 @@ const addRouteDetail = async (req, res) => {
           savedReverseRoute,
         },
       });
+
+
     } else {
       return res.status(400).send({
         message: "Invalid Train selection",
@@ -78,8 +87,66 @@ const getAllRouteDetail = async (req, res) => {
   }
 };
 
-// ! if i want to delete a route all TrainId related  routes will be deleted
+const getSingleRouteDetailByTrain = async (req, res) => {
+  const TrainId = req.params.trainid;
+  try {
+    const routeDetail = await RouteDetail.find({ TrainId: TrainId });
 
-const deleteRoute = async (req, res) => {};
+    if (routeDetail) {
+      return res.status(200).send({
+        message: "Seat details of this train provided successfully...",
+        success: true,
+        data: routeDetail,
+      });
+    }
+  } catch (error) {
+    return res.status(400).send({
+      message: error.message,
+      success: false,
+    });
+  }
+};
 
-module.exports = { addRouteDetail, getAllRouteDetail };
+//! if i want to delete a route all TrainId related  routes will be deleted
+const deleteRouteDetail = async (req, res) => {
+  const { trainid } = req.params;
+  try {
+    const availableRouteDetail = await RouteDetail.findOne({
+      TrainId: trainid,
+    });
+
+    console.log(availableRouteDetail == "");
+
+    if (availableRouteDetail != "") {
+      console.log(availableRouteDetail);
+
+      const deletedRoutes = await RouteDetail.deleteMany({ TrainId: trainid });
+
+      if (deletedRoutes.acknowledged) {
+        return res.status(200).send({
+          message: "route details deleted success...",
+          success: true,
+          data: availableRouteDetail,
+        });
+      }
+    } else {
+      console.log("availableRouteDetail is empty");
+    }
+  } catch (error) {
+    return res.status(200).send({
+      success: false,
+      data: error.message,
+    });
+  }
+};
+
+//! need to implement
+const updateRouteDetail = async (req, res) => {};
+
+module.exports = {
+  addRouteDetail,
+  getAllRouteDetail,
+  deleteRouteDetail,
+  updateRouteDetail,
+  getSingleRouteDetailByTrain,
+};

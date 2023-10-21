@@ -4,8 +4,15 @@ import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
 
-const ClassDetailTable = ({ data }) => {
+import {
+  deleteClassDetail,
+  getSingleclassDetailByTrain,
+} from "../features/ClassDetail/classdetailSlice";
+import { useDispatch, useSelector } from "react-redux";
+
+const ClassDetailTable = ({ classdetails }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const columns = [
     {
       title: "TrainId",
@@ -25,39 +32,44 @@ const ClassDetailTable = ({ data }) => {
     {
       title: "Seat Row",
       dataIndex: "SeatRow",
-      width: 40,
+      width: 20,
     },
     {
       title: "Total Seats",
       dataIndex: "TotalSeats",
-      width: 40,
+      width: 20,
     },
     {
       title: "Booked Seats",
       dataIndex: "BookedSeats",
-      width: 40,
+      width: 30,
     },
     {
       title: "Available Seats",
       dataIndex: "AvailableSeats",
-      width: 40,
+      width: 30,
     },
-    // {
-    //   title: "Actions",
-    //   dataIndex: "actions",
-    //   render: (text, record) => (
-    //     <Button
-    //       onClick={async () =>
-    //         await axios.delete(
-    //           `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
-    //         )
-    //       }
-    //     >
-    //       Delete
-    //     </Button>
-    //   ),
-    //   width: 20,
-    // },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (text, record) => (
+        <Button
+          // onClick={async () =>
+          //   await axios.delete(
+          //     `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
+          //   )
+          // }
+
+          onClick={() => {
+            dispatch(deleteClassDetail(record._id));
+            dispatch(getSingleclassDetailByTrain(record.TrainId));
+          }}
+        >
+          Delete
+        </Button>
+      ),
+      width: 20,
+    },
     // {
     //   title: "Actions",
     //   dataIndex: "actions",
@@ -79,14 +91,15 @@ const ClassDetailTable = ({ data }) => {
   return (
     <Table
       columns={columns}
-      dataSource={data}
+      dataSource={classdetails}
       pagination={{
         pageSize: 50,
       }}
       scroll={{
         y: 350,
       }}
-      rowKey={(record) => record._id} // Replace "id" with the actual unique key property
+      key={(text, record) => record._id}
+      rowKey={(text, record) => record._id} // Replace "id" with the actual unique key property
     />
   );
 };

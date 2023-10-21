@@ -4,7 +4,15 @@ import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllPickupInfoByRoute,
+  deletePickupInfo,
+  createPickupInfoDetail,
+} from "../features/Pickupinfo/pickupinfoSlice";
+
 const PickupInfoTable = (props) => {
+  const dispatch = useDispatch();
   const updateKeyInParent = () => {
     // Call the setKey function passed as a prop with the new value
     props.setKey(3); // Replace 'newKeyValue' with the value you want to set
@@ -22,6 +30,12 @@ const PickupInfoTable = (props) => {
       dataIndex: "Station",
       width: 20,
     },
+    {
+      title: "Route Order",
+      dataIndex: "RouteOrder",
+      width: 15,
+    },
+
     {
       title: "Time",
       dataIndex: "Time",
@@ -43,11 +57,15 @@ const PickupInfoTable = (props) => {
       dataIndex: "actions",
       render: (text, record) => (
         <Button
-          onClick={async () =>
-            await axios.delete(
-              `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
-            )
-          }
+          onClick={() => {
+            dispatch(deletePickupInfo(record._id));
+            dispatch(getAllPickupInfoByRoute(record.RouteId));
+          }}
+          // onClick={async () =>
+          //   await axios.delete(
+          //     `http://localhost:5000/api/admin/remove-train-detail/${record._id}`
+          //   )
+          // }
         >
           Delete
         </Button>
@@ -108,7 +126,8 @@ const PickupInfoTable = (props) => {
       scroll={{
         y: 350,
       }}
-      rowKey={(record) => record._id} // Replace "id" with the actual unique key property
+      // key={(record) => record._id}
+      rowKey={(text, record) => record._id} // Replace "id" with the actual unique key property
     />
   );
 };
