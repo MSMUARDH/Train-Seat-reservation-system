@@ -113,8 +113,9 @@ const RouteDetailTable = ({ routeDetails }) => {
       scroll={{
         y: 350,
       }}
-      key={(text, record) => record._id}
-      rowKey={(text, record) => record._id} // Replace "id" with the actual unique key property
+      
+      key={(_, record) => record._id}
+      // rowKey={(text, record) => record._id} // Replace "id" with the actual unique key property
     />
   );
 };

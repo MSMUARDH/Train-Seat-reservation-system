@@ -3,7 +3,7 @@ const RouteDetail = require("../../model/RouteDetailModel");
 const { ObjectId } = require("mongodb");
 
 const addRouteDetail = async (req, res) => {
-  const { From, To } = req.body.values;
+  const { From, To } = req.body;
   const TrainId = req.body.trainid;
 
   // console.log(From, To);
@@ -42,8 +42,6 @@ const addRouteDetail = async (req, res) => {
       const savedOriginalRoute = await originalRoute.save();
       const savedReverseRoute = await reverseRoute.save();
 
-
-
       return res.status(200).send({
         message: "Route detail created successfully...",
         success: true,
@@ -52,8 +50,6 @@ const addRouteDetail = async (req, res) => {
           savedReverseRoute,
         },
       });
-
-
     } else {
       return res.status(400).send({
         message: "Invalid Train selection",

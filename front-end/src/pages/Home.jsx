@@ -8,6 +8,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import Navigation from "../components/User/Navigation";
 
 const stations = [
   "Aluthgama",
@@ -100,10 +101,18 @@ const Home = () => {
   const [date, setDate] = useState("");
   const [form] = Form.useForm();
 
-  const error = () => {
+  const errorMsg = (content) => {
     messageApi.open({
       type: "error",
-      content: "Please select different stations",
+      content: `${content}`,
+      // content: "Please select different stations",
+    });
+  };
+
+  const warningMsg = (content) => {
+    messageApi.open({
+      type: "warning",
+      content: `${content}`,
     });
   };
 
@@ -129,7 +138,7 @@ const Home = () => {
 
     try {
       if (From == To) {
-        error();
+        errorMsg("Please select different stations");
       } else {
         const response = await axios.post(
           `http://localhost:5000/api/user/check-train-availability`,
@@ -138,13 +147,19 @@ const Home = () => {
 
         if (response.status == 200) {
           console.log(response);
-          navigate("/user/check-train-availability");
+          navigate(
+            `/user/check-train-availability?From=${data.From}&To=${data.To}&date=${data.date}`
+          );
+
+          // `/user/check-train-availability?From=${data.From}&To=${data.To}&date=${data.date}`
           // form.resetFields();
         }
-        console.log(response.data);
       }
     } catch (error) {
-      console.log(error.message);
+      if (error.response.status == 404) {
+        warningMsg(error.response.data.message);
+      }
+      // console.log(error.response.status);
     }
 
     // console.log(date);
@@ -152,6 +167,7 @@ const Home = () => {
 
   return (
     <div>
+      {/* <Navigation /> */}
       <HomeCarousel />
       {contextHolder}
 

@@ -26,7 +26,10 @@ import TrainScheduleTable from "./pages/admin/TrainSchedulePage";
 import TrainSchedulePage from "./pages/admin/TrainSchedulePage";
 import PickupInfoPage from "./pages/admin/PickupInfoPage";
 import AvailabilityPage from "./pages/User/AvailabilityPage";
-import HomePage from "./pages/User/HomePage";
+import ClassSelection from "./pages/User/ClassSelectionPage";
+import ClassSelectionPage from "./pages/User/ClassSelectionPage";
+import { TrainProvider } from "./context/userSlectedTrainDetails/TrainContext";
+// import HomePage from "./pages/User/HomePage";
 
 function App() {
   const router = createBrowserRouter(
@@ -40,11 +43,7 @@ function App() {
           /> */}
         </Route>
 
-        <Route
-          path="/user/home"
-          element={<HomePage />}
-          errorElement={<Error />}
-        />
+        <Route path="/user/home" element={<Home />} errorElement={<Error />} />
 
         <Route path="/admin" element={<AdminHome />} errorElement={<Error />} />
 
@@ -87,8 +86,11 @@ function App() {
           element={<AvailabilityPage />}
         />
 
-        
-        
+        <Route
+          exact
+          path="/user/select-train-class/:trainid/:routeid"
+          element={<ClassSelectionPage />}
+        />
 
         <Route path="*" element={<NotFound />} />
       </Route>
@@ -96,11 +98,13 @@ function App() {
   );
   return (
     <ConfigProvider theme={antThemeConfig}>
-      <AppDataProvider>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
-      </AppDataProvider>
+      <TrainProvider>
+        <AppDataProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </AppDataProvider>
+      </TrainProvider>
     </ConfigProvider>
   );
 }

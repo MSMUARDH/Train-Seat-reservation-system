@@ -1,0 +1,20 @@
+.train-details {
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.detail {
+    display: 'flex';
+    width: 50%;
+    margin-bottom: 10px;
+    font-weight: bold;
+    /* justify-content: ; */
+    align-items: center;
+}
+
+.detail span {
+    display: block;
+    margin-bottom: 5px;
+}

@@ -11,7 +11,7 @@ const createToken = (_id) => {
 };
 
 const registerUser = async (req, res) => {
-  try { 
+  try {
     const {
       First_name,
       Last_name,
@@ -42,7 +42,6 @@ const registerUser = async (req, res) => {
 
     const user = await User.create(userDetails);
 
-   
     sendVerificationMail(user);
 
     const token = createToken(user._id);
@@ -108,7 +107,12 @@ const loginUser = async (req, res) => {
 
       res
         .status(200)
-        .send({ message: "Login successful", success: true, token: token ,role:userExist.role});
+        .send({
+          message: "Login successful",
+          success: true,
+          token: token,
+          role: userExist.role,
+        });
     } else if (!isVerified) {
       res
         .status(400)

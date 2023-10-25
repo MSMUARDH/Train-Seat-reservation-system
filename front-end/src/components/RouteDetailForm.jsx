@@ -144,13 +144,27 @@ const AdvancedSearchForm = ({ trainid }) => {
             ]}
             initialValue=""
           >
-            <Select>
-              {stations.map((station, index) => (
-                <Option value={station} key={index}>
-                  {station}{" "}
-                </Option>
-              ))}
-            </Select>
+            <Select
+              showSearch
+              style={{
+                width: 300,
+                height: 50,
+              }}
+              placeholder="Search to Select"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "").toLocaleLowerCase().includes(input)
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.label ?? "").toLowerCase())
+              }
+              options={stations.map((station, index) => ({
+                value: `${index}-${station}`, // Start index from 1
+                label: station,
+              }))}
+            />
           </Form.Item>
         </Col>
       );
@@ -161,28 +175,35 @@ const AdvancedSearchForm = ({ trainid }) => {
   const postSeatDetails = async (values) => {
     console.log(values.From, values.To);
 
-    if (values.From == "Choose Station" || values.To == "Choose Station") {
-      console.log("Please select a station");
-    } else if (values.From == values.To) {
+    function extractStringPart(inputString) {
+      // Split the input string by hyphen
+      const parts = inputString.split("-");
+
+      // Check if there are at least two parts (before and after the hyphen)
+      if (parts.length >= 2) {
+        // Return the part after the hyphen (index 1)
+        return parts[1].trim();
+      }
+
+      // If there are no hyphens in the input string, return the original string
+      return inputString.trim();
+    }
+
+    const From = extractStringPart(values.From);
+    const To = extractStringPart(values.To);
+
+    if (From == To) {
       console.log("Station should be different");
     } else {
-      const data = { trainid, values };
+      // console.log(From, To, trainid);
+
+      const data = { trainid, From, To };
+
+      // console.log("data", data);
 
       dispatch(createRouteDetails(data));
-      dispatch(getAllRoutedetail(trainid));
-      // try {
-      //   const response = await axios.post(
-      //     "http://localhost:5000/api/admin/add-route-detail",
-      //     data
-      //   );
-
-      //   if (response.status == 200) {
-      //     form.resetFields();
-      //   }
-      //   console.log(response);
-      // } catch (error) {
-      //   console.log(error.response.data.message);
-      // }
+      // ! i change below code gett all to get single
+      dispatch(getSingleRouteDetailByTrain(trainid));
     }
   };
 

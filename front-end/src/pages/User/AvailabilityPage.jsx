@@ -1,143 +1,260 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Space, Table, Tag } from "antd";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
+import StepsBar from "../../components/User/StepsBar";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/User/Spinner";
+import { TrainContext } from "../../context/userSlectedTrainDetails/TrainContext";
+import { useContext } from "react";
 
-// !old data
-// const columns = [
+// const data = [
 //   {
-//     title: "Name",
-//     dataIndex: "name",
-//     key: "name",
-//     render: (text) => <a>{text}</a>,
+//     key: "1",
+//     name: "John Brown",
+//     age: 32,
+//     address: "New York No. 1 Lake Park",
+//     tags: ["nice", "developer"],
 //   },
 //   {
-//     title: "Age",
-//     dataIndex: "age",
-//     key: "age",
+//     key: "2",
+//     name: "Jim Green",
+//     age: 42,
+//     address: "London No. 1 Lake Park",
+//     tags: ["loser"],
 //   },
 //   {
-//     title: "Address",
-//     dataIndex: "address",
-//     key: "address",
-//   },
-//   {
-//     title: "Tags",
-//     key: "tags",
-//     dataIndex: "tags",
-//     render: (_, { tags }) => (
-//       <>
-//         {tags.map((tag) => {
-//           let color = tag.length > 5 ? "geekblue" : "green";
-//           if (tag === "loser") {
-//             color = "volcano";
-//           }
-//           return (
-//             <Tag color={color} key={tag}>
-//               {tag.toUpperCase()}
-//             </Tag>
-//           );
-//         })}
-//       </>
-//     ),
-//   },
-//   {
-//     title: "Action",
-//     key: "action",
-//     render: (_, record) => (
-//       <Space size="middle">
-//         <a>Invite {record.name}</a>
-//         <a>Delete</a>
-//       </Space>
-//     ),
+//     key: "3",
+//     name: "Joe Black",
+//     age: 32,
+//     address: "Sydney No. 1 Lake Park",
+//     tags: ["cool", "teacher"],
 //   },
 // ];
 
-// !new data
-const columns = [
-  {
-    title: "Train Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Departs",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Arrives",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Class Type",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Choose</a>
-      </Space>
-    ),
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
-
 const AvailabilityPage = () => {
+  const { trainState, dispatch } = useContext(TrainContext);
+
+  const navigate = useNavigate();
+
+  // !test
+
+  // const handleTrainSelection = () => {
+  //   const newTrainSelection = {
+  //     trainId: "2222 Changed",
+  //     trainName: "Bradly Express Changed",
+  //     trainType: "express Changed",
+  //     route: "Badulla - Colombo Fort Changed",
+  //     departureTime: "2023-10-19T11:00:00.811Z Changed",
+  //     station: "Nawalapitiya Changed",
+  //   };
+
+  //   dispatch({ type: "SET_TRAIN_SELECTION", payload: newTrainSelection });
+  // };
+
+  //!test
+
+  // !new data
+  const columns = [
+    {
+      title: "TrainNo",
+      dataIndex: "TrainNo",
+      key: "TrainId",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "TrainName",
+      dataIndex: "TrainName",
+      key: "TrainId",
+    },
+    {
+      title: "TrainType",
+      dataIndex: "TrainType",
+      key: "TrainId",
+    },
+    {
+      title: "MainRoute",
+      dataIndex: "MainRoute",
+      key: "TrainId",
+    },
+    {
+      title: "depatureTime",
+      dataIndex: "depatureTime",
+      key: "TrainId",
+    },
+    {
+      title: "station",
+      dataIndex: "station",
+      key: "TrainId",
+    },
+    {
+      title: "Class Type",
+      key: "TrainId",
+      dataIndex: "fromStationClassDetails",
+      render: (_, { fromStationClassDetails }) => (
+        <>
+          {fromStationClassDetails.map((cls) => {
+            console.log("inside tag", cls.ClassType);
+            let color =
+              cls.ClassType == "1st Class"
+                ? "geekblue"
+                : cls.ClassType == "2nd Class"
+                ? "green"
+                : "red";
+            //// if (tag === "loser") {
+            ////   color = "volcano";
+            // // }
+            return (
+              <Tag
+                style={{ display: "flex", marginBottom: 10 }}
+                color={color}
+                key={cls._id}
+              >
+                {cls.ClassType.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+
+    // {
+    //   title: "Class Type",
+    //   key: "tags",
+    //   dataIndex: "classes",
+    //   render: (_, { tags }) => (
+    //     <>
+    //       {tags.map((tag) => {
+    //         let color = tag.length > 5 ? "geekblue" : "green";
+    //         if (tag === "loser") {
+    //           color = "volcano";
+    //         }
+    //         return (
+    //           <Tag color={color} key={tag}>
+    //             {tag.toUpperCase()}
+    //           </Tag>
+    //         );
+    //       })}
+    //     </>
+    //   ),
+    // },
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <Space size="middle">
+    //       <a>Invite {record.name}</a>
+    //       <a>Choose</a>
+    //     </Space>
+    //   ),
+    // },
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <Space size="middle">
+    //       <a>Invite {record.name}</a>
+    //       <a>Choose</a>
+    //     </Space>
+    //   ),
+    // },
+    {
+      title: "Action",
+      key: "TrainId",
+      render: (_, record) => (
+        <Space
+          size="middle"
+          onClick={() => {
+            // console.log(record);
+            const newTrainSelection = {
+              trainId: `${record.MainRoute}`,
+              trainName: `${record.TrainName}`,
+              trainType: `${record.TrainType}`,
+              route: `${record.MainRoute}`,
+              departureTime: `${record.depatureTime}`,
+              station: `${record.station}`,
+            };
+
+            dispatch({
+              type: "SET_TRAIN_SELECTION",
+              payload: newTrainSelection,
+            });
+            navigate(
+              `/user/select-train-class/${record.TrainId}/${record.RouteId}?Station=${record.station}&RouteOrder=${record.RouteOrder}`
+            );
+          }}
+        >
+          <a>Choose</a>
+        </Space>
+      ),
+    },
+  ];
+
+  const [data, setData] = useState("");
+  const [isSpin, setIsSpin] = useState(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  const from = queryParams.get("From");
-  const to = queryParams.get("To");
+  const From = queryParams.get("From");
+  const To = queryParams.get("To");
   const date = queryParams.get("date");
+
+  const postData = { From, To, date };
+
+  // console.log(postData);
+
+  const getAvailabalityData = async () => {
+    try {
+      setIsSpin(true);
+      const response = await axios.post(
+        `http://localhost:5000/api/user/check-train-availability`,
+        postData
+      );
+
+      if (response.status == 200) {
+        setData(response.data.data);
+        setIsSpin(false);
+      }
+    } catch (error) {
+      console.log(error.message);
+      setIsSpin(false);
+    }
+  };
+
+  useEffect(() => {
+    getAvailabalityData();
+  }, []);
+
   return (
-    <div>
-      <h1>AvailabilityPage</h1>
-      <Table columns={columns} dataSource={data} />
-    </div>
+    <>
+      <h1 style={{ textAlign: "center" }}>AvailabilityPage</h1>
+      <StepsBar />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+        }}
+      >
+        {data ? (
+          <Table columns={columns} dataSource={data} />
+        ) : (
+          isSpin && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Spinner />
+            </div>
+          )
+        )}
+      </div>
+    </>
   );
 };
 
