@@ -101,9 +101,6 @@ const AvailabilityPage = () => {
                 : cls.ClassType == "2nd Class"
                 ? "green"
                 : "red";
-            //// if (tag === "loser") {
-            ////   color = "volcano";
-            // // }
             return (
               <Tag
                 style={{ display: "flex", marginBottom: 10 }}
@@ -165,13 +162,24 @@ const AvailabilityPage = () => {
         <Space
           size="middle"
           onClick={() => {
-            // console.log(record);
+            const date = new Date(record.depatureTime);
+            const hours = date.getUTCHours();
+            let minutes = date.getUTCMinutes().toString();
+
+            if (minutes) {
+              if (minutes == "0") {
+                minutes = "00";
+              }
+            }
+
+            const time = `${hours}:${minutes}`;
+
             const newTrainSelection = {
               trainId: `${record.MainRoute}`,
               trainName: `${record.TrainName}`,
               trainType: `${record.TrainType}`,
               route: `${record.MainRoute}`,
-              departureTime: `${record.depatureTime}`,
+              departureTime: `${time}`,
               station: `${record.station}`,
             };
 

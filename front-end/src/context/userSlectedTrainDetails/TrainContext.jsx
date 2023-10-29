@@ -3,12 +3,12 @@ import React, { createContext, useReducer, useContext } from "react";
 
 // Initial state
 const initialState = {
-  trainId: "2222 test",
-  trainName: "Bradly Express test",
-  trainType: "express",
-  route: "Badulla - Colombo Fort",
-  departureTime: "2023-10-19T11:00:00.811Z",
-  station: "Nawalapitiya",
+  trainId: "",
+  trainName: "",
+  trainType: "",
+  route: "",
+  departureTime: "",
+  station: "",
 };
 
 // Reducer function
