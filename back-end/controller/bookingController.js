@@ -355,4 +355,8 @@ const getTrainClassDetails = async (req, res) => {
   });
 };
 
+const bookingTrain = async (req, res) => {
+  const {} = req.body;
+};
+
 module.exports = { checkTrainAvailability, getTrainClassDetails };

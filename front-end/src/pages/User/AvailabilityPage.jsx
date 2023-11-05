@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Space, Table, Tag } from "antd";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import StepsBar from "../../components/User/StepsBar";
 import { useNavigate } from "react-router-dom";
@@ -8,32 +8,19 @@ import Spinner from "../../components/User/Spinner";
 import { TrainContext } from "../../context/userSlectedTrainDetails/TrainContext";
 import { useContext } from "react";
 
-// const data = [
-//   {
-//     key: "1",
-//     name: "John Brown",
-//     age: 32,
-//     address: "New York No. 1 Lake Park",
-//     tags: ["nice", "developer"],
-//   },
-//   {
-//     key: "2",
-//     name: "Jim Green",
-//     age: 42,
-//     address: "London No. 1 Lake Park",
-//     tags: ["loser"],
-//   },
-//   {
-//     key: "3",
-//     name: "Joe Black",
-//     age: 32,
-//     address: "Sydney No. 1 Lake Park",
-//     tags: ["cool", "teacher"],
-//   },
-// ];
-
 const AvailabilityPage = () => {
-  const { trainState, dispatch } = useContext(TrainContext);
+  const [data, setData] = useState("");
+  const [isSpin, setIsSpin] = useState(false);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const From = queryParams.get("From");
+  const To = queryParams.get("To");
+  const date = queryParams.get("date");
+
+  const postData = { From, To, date };
+
+  // const { trainState, dispatch } = useContext(TrainContext);
 
   const navigate = useNavigate();
 
@@ -94,7 +81,7 @@ const AvailabilityPage = () => {
       render: (_, { fromStationClassDetails }) => (
         <>
           {fromStationClassDetails.map((cls) => {
-            console.log("inside tag", cls.ClassType);
+            // console.log("inside tag", cls.ClassType);
             let color =
               cls.ClassType == "1st Class"
                 ? "geekblue"
@@ -114,47 +101,6 @@ const AvailabilityPage = () => {
         </>
       ),
     },
-
-    // {
-    //   title: "Class Type",
-    //   key: "tags",
-    //   dataIndex: "classes",
-    //   render: (_, { tags }) => (
-    //     <>
-    //       {tags.map((tag) => {
-    //         let color = tag.length > 5 ? "geekblue" : "green";
-    //         if (tag === "loser") {
-    //           color = "volcano";
-    //         }
-    //         return (
-    //           <Tag color={color} key={tag}>
-    //             {tag.toUpperCase()}
-    //           </Tag>
-    //         );
-    //       })}
-    //     </>
-    //   ),
-    // },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   render: (_, record) => (
-    //     <Space size="middle">
-    //       <a>Invite {record.name}</a>
-    //       <a>Choose</a>
-    //     </Space>
-    //   ),
-    // },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   render: (_, record) => (
-    //     <Space size="middle">
-    //       <a>Invite {record.name}</a>
-    //       <a>Choose</a>
-    //     </Space>
-    //   ),
-    // },
     {
       title: "Action",
       key: "TrainId",
@@ -162,9 +108,9 @@ const AvailabilityPage = () => {
         <Space
           size="middle"
           onClick={() => {
-            const date = new Date(record.depatureTime);
-            const hours = date.getUTCHours();
-            let minutes = date.getUTCMinutes().toString();
+            const givenDate = new Date(record.depatureTime);
+            const hours = givenDate.getUTCHours();
+            let minutes = givenDate.getUTCMinutes().toString();
 
             if (minutes) {
               if (minutes == "0") {
@@ -174,19 +120,35 @@ const AvailabilityPage = () => {
 
             const time = `${hours}:${minutes}`;
 
-            const newTrainSelection = {
-              trainId: `${record.MainRoute}`,
-              trainName: `${record.TrainName}`,
-              trainType: `${record.TrainType}`,
-              route: `${record.MainRoute}`,
-              departureTime: `${time}`,
-              station: `${record.station}`,
-            };
+            // const newTrainSelection = {
+            //   route: `${record.MainRoute}`,
+            //   trainType: `${record.TrainType}`,
+            //   trainName: `${record.TrainName}`,
+            //   trainNo: `${record.TrainNo}`,
+            //   startStation: `${From}`,
+            //   endStation: `${To}`,
+            //   depatureDate: `${date}`,
+            //   departureTime: `${time}`,
+            //   trainId: `${record.TrainId}`,
+            //   routeId: `${record.RouteId}`,
+            // };
 
-            dispatch({
-              type: "SET_TRAIN_SELECTION",
-              payload: newTrainSelection,
-            });
+            localStorage.setItem(
+              "TRAIN_SELECTION",
+              JSON.stringify({
+                route: `${record.MainRoute}`,
+                trainType: `${record.TrainType}`,
+                trainName: `${record.TrainName}`,
+                trainNo: `${record.TrainNo}`,
+                startStation: `${From}`,
+                endStation: `${To}`,
+                depatureDate: `${date}`,
+                departureTime: `${time}`,
+                trainId: `${record.TrainId}`,
+                routeId: `${record.RouteId}`,
+              })
+            );
+
             navigate(
               `/user/select-train-class/${record.TrainId}/${record.RouteId}?Station=${record.station}&RouteOrder=${record.RouteOrder}`
             );
@@ -198,18 +160,18 @@ const AvailabilityPage = () => {
     },
   ];
 
-  const [data, setData] = useState("");
-  const [isSpin, setIsSpin] = useState(false);
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
+  // const [data, setData] = useState("");
+  // const [isSpin, setIsSpin] = useState(false);
+  // const location = useLocation();
+  // const queryParams = new URLSearchParams(location.search);
 
-  const From = queryParams.get("From");
-  const To = queryParams.get("To");
-  const date = queryParams.get("date");
+  // const From = queryParams.get("From");
+  // const To = queryParams.get("To");
+  // const date = queryParams.get("date");
 
-  const postData = { From, To, date };
+  // const postData = { From, To, date };
 
-  // console.log(postData);
+  // console.log("postdata", postData);
 
   const getAvailabalityData = async () => {
     try {
@@ -267,6 +229,3 @@ const AvailabilityPage = () => {
 };
 
 export default AvailabilityPage;
-
-// const App = () => <Table columns={columns} dataSource={data} />;
-// export default App;

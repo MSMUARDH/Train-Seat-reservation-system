@@ -14,3 +14,4 @@ const BookingMasterSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("BookingMaster", BookingMasterSchema);
+``

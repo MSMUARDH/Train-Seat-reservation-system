@@ -10,6 +10,8 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import Navigation from "../components/User/Navigation";
 
+import moment from "moment";
+
 const stations = [
   "Aluthgama",
   "Ambalangoda",
@@ -100,6 +102,12 @@ const Home = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [date, setDate] = useState("");
   const [form] = Form.useForm();
+
+  //! disabledDate
+  const disabledDate = (current) => {
+    // Can't select days before today
+    return current && current < moment().startOf("day");
+  };
 
   const errorMsg = (content) => {
     messageApi.open({
@@ -280,6 +288,7 @@ Book Your Seat "
                   ]}
                 >
                   <DatePicker
+                    // disabledDate={disabledDate}
                     style={{ width: 200, height: 50 }}
                     size={10}
                     format="DD-MM-YYYY"
@@ -291,35 +300,6 @@ Book Your Seat "
                   />
                 </Form.Item>
               </div>
-
-              {/* <div>
-      <span>kdhakldh</span>
-      <Form.Item
-        style={{ marginTop: 10 }}
-        // name="c"
-        // label="test"
-        // labelAlign="center"
-        // labelCol=""
-        rules={[
-          {
-            required: true,
-            message: "Select something!",
-          },
-        ]}
-        initialValue=""
-      >
-
-      </Form.Item>
-    </div> */}
-
-              {/* <div>
-      <Space direction="vertical">
-        <DatePicker
-          style={{ width: 200, height: 50 }}
-          // onChange={onChange}
-        />
-      </Space>
-    </div> */}
             </div>
             <div
               style={{

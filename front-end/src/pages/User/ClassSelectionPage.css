@@ -6,7 +6,7 @@
 }
 
 .detail {
-    display: 'flex';
+    display: "flex";
     width: 50%;
     margin-bottom: 10px;
     font-weight: bold;
@@ -18,3 +18,84 @@
     display: block;
     margin-bottom: 5px;
 }
+
+/*Seat Details*/
+.seat-details-card {
+    border-radius: 16px;
+    margin-left: 10vh;
+    margin-right: 10vh;
+    background-color: rgb(208, 208, 208);
+    box-shadow: 5px 8px 24px 5px rgba(0, 0, 0, 0);
+    margin-bottom: 10vh;
+}
+
+.class-selection-title {
+    font-size: 24px;
+    font-weight: 500;
+    display: flex;
+}
+
+.available-seat {
+    background-color: rgb(5, 45, 100);
+    color: white;
+    padding: 30px;
+    width: 106%;
+    border-radius: 0px 0px 16px 16px;
+}
+
+.available-seat-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+}
+
+.available-seat-no {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: 5vh;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.available-price {
+    margin-left: 35vh;
+    border-radius: 10px;
+    padding: 10px;
+    color: rgb(27, 27, 27);
+}
+
+/*Seat Details*/
+
+/*Train Details*/
+.train-details-card {
+    width: 200vh;
+    height: 70vh;
+    margin-left: 10vh;
+    border-radius: 16px;
+    box-shadow: 5px 8px 24px 5px #babcc0;
+    background-color: #babcc0;
+}
+
+.train-details-card-one {
+    width: 100vh;
+}
+
+th {
+    text-align: left;
+}
+
+td {
+    padding-left: 20px;
+}
+
+tr {
+    padding-bottom: 15px;
+}
+
+/*Train Details*/
+
+/*Payment details*/
+
+/*Payment details*/
