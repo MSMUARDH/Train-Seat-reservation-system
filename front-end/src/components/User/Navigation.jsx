@@ -1,93 +1,39 @@
-import React, { useState } from "react";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
-import Home from "../../pages/Home";
-const { Header, Content, Footer } = Layout;
+import React from "react";
+import { Layout, Menu } from "antd";
+const { Header, Content } = Layout;
+import logo from "../../assets/img/logo.png";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-const Navigation = () => {
-  const [key, setKey] = useState(1);
-
-  const navigationItem = ["Home", "About", "some"];
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+const App = () => {
   return (
     <Layout className="layout">
-      <Header
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <div className="demo-logo" />
+      <Header style={{ display: "flex", justifyContent: "space-between" }}>
+        <img src={logo} alt="Logo" />
         <Menu
-          onSelect={(e) => setKey(e.key)}
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["1"]}
-          items={new Array(3).fill(null).map((_, index) => {
-            const key = index + 1;
-            return {
-              key,
-              label: navigationItem[index],
-            };
-          })}
-        />
+          defaultSelectedKeys={["home"]}
+          style={{ flex: 1, justifyContent: "flex-end" }}
+        >
+          <Menu.Item key="home">
+            <Link to="/user/home">Home</Link>
+          </Menu.Item>
+          <Menu.Item key="about">
+            <Link to="/about">About</Link>
+          </Menu.Item>
+          <Menu.Item key="contact">
+            <Link to="/contact">Contact</Link>
+          </Menu.Item>
+          <Menu.Item key="login">
+            <Link to="/login">Login</Link>
+          </Menu.Item>
+          <Menu.Item key="signup">
+            <Link to="/signup">Signup</Link>
+          </Menu.Item>
+        </Menu>
       </Header>
-      <Content
-        style={{
-          padding: "0 50px",
-        }}
-      >
-        <Breadcrumb
-          style={{
-            margin: "16px 0",
-          }}
-        >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
-        <div
-          className="site-layout-content"
-          style={{
-            background: colorBgContainer,
-          }}
-        >
-          {key == 1 && <Home />}
-          {/* { key ==2 && } */}
-          {/* { key ==2 && } */}
-
-          {/* { key ==2 && } */}
-          
-        </div>
-      </Content>
-      <Footer
-        style={{
-          textAlign: "center",
-        }}
-      >
-        Ant Design ©2023 Created by Ant UED
-      </Footer>
     </Layout>
   );
 };
-export default Navigation;
 
-// import React from "react";
-// import { Tabs } from "antd";
-// import Home from "../../pages/Home";
-// const Navigation = () => (
-//   <Tabs
-//     defaultActiveKey="1"
-//     centered
-//     items={new Array(3).fill(null).map((_, i) => {
-//       const id = String(i + 1);
-//       return {
-//         label: `Tab ${id}`,
-//         key: id,
-//         children: id == 3 && <Home />,
-//       };
-//     })}
-//   />
-// );
-// export default Navigation;
+export default App;
