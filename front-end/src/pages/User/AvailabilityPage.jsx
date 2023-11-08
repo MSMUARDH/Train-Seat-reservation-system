@@ -67,6 +67,9 @@ const AvailabilityPage = () => {
     {
       title: "depatureTime",
       dataIndex: "depatureTime",
+      render: (text, record) => (
+        <p>{record.depatureTime?.split("T")[1].split(".")[0]}</p>
+      ),
       key: "TrainId",
     },
     {
@@ -146,6 +149,7 @@ const AvailabilityPage = () => {
                 departureTime: `${time}`,
                 trainId: `${record.TrainId}`,
                 routeId: `${record.RouteId}`,
+                ScheduleId: `${record.ScheduleId}`,
               })
             );
 

@@ -66,7 +66,7 @@ router.delete("/remove-train-detail/:id", removeTrain);
 // ? SeatDetail or ClassDetail(Same)
 router.post("/add-seatdetails", addSeatDetail);
 router.get("/get-seatdetails", getseatDetails);
-router.get("/get-single-seatdetails/:trainid", getSingleClassDetail);
+router.get("/get-single-seatdetails/:trainid/:routeid", getSingleClassDetail);
 // ! updating a seat detail is not good idea (bcz when the user already booked a seat there will be an issue)
 router.put("/update-seatdetails/:classid", updateSeatDetails); //! <--- need to implement
 router.delete("/delete-seatdetails/:classid", deleteSeatDetails);
@@ -82,7 +82,12 @@ router.delete("/delete-routedetail/:trainid", deleteRouteDetail);
 //? Train Schedule Details
 router.post("/add-trainschedule/:trainid/:routeid", addTrainSchedule);
 router.get("/get-all-trainschedule", getAllTrainSchedule);
-router.get("/get-single-trainschedule/:routeid", getScheduleDetailByRoute);
+//!ongoing testing
+router.get(
+  "/get-single-trainschedule/:trainid/:routeid",
+  getScheduleDetailByRoute
+);
+// //////////////!
 router.put("/update-trainschedule", updateTrainSchedule); //! <---need to implement
 router.delete("/delete-trainschedule/:scheduleid", deleteTrainSchedule);
 
@@ -92,8 +97,6 @@ router.get("/get-pickupinfo/:routeid", getPickupInfoForaRoute);
 // router.get("/get-all-pickupinfo", getAllPickupInfo);
 router.put("/update-pickupinfo/:routeid", updatePickupInfo); //!need to implement
 router.delete("/delete-pickupinfo/:pickupinfoid", deletePickupInfo);
-
-
 
 router.post("/create-booking", createBooking);
 router.post("/create-pnrdetail", createPNRDetail);

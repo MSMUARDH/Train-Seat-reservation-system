@@ -17,11 +17,11 @@ const CardDetailSchema = new mongoose.Schema({
     required: true,
   },
   CardType: {
-    type: Number,
+    type: String,
     required: true,
   },
   ExpDate: {
-    type: Date,
+    type: String,
     required: true,
   },
 });

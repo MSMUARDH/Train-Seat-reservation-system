@@ -42,9 +42,11 @@ const getAllScheduleDetail = async (token) => {
 };
 
 //* get  schedule detail by train id
-const getScheduleDetailByRoute = async (routeId) => {
+const getScheduleDetailByRoute = async (params) => {
+  const { trainid, routeid } = params;
+
   const response = await axios.get(
-    `http://localhost:5000/api/admin/get-single-trainschedule/${routeId}`
+    `http://localhost:5000/api/admin/get-single-trainschedule/${trainid}/${routeid}`
     //   {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -52,7 +54,7 @@ const getScheduleDetailByRoute = async (routeId) => {
     // }
   );
 
-  console.log("getScheduleDetailByRoute", response.data.data);
+  // console.log("getScheduleDetailByRoute", response.data.data);
   return response.data.data;
 };
 

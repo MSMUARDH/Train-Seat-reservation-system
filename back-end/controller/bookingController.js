@@ -2,9 +2,13 @@ const PickupInfoModel = require("../model/PickupInfoModel");
 const ScheduleMasterModel = require("../model/ScheduleMasterModel");
 const RouteDetailModel = require("../model/RouteDetailModel");
 const ClassDetailModel = require("../model/SeatDetailModel");
+const CardDetailModel = require("../model/CardDetailModel");
+const BookingModel = require("../model/BookingMasterModel");
 
 const checkTrainAvailability = async (req, res) => {
   const { From, To, date } = req.body;
+
+  // console.log("date test", date);
 
   try {
     // !check for the from station available
@@ -24,7 +28,7 @@ const checkTrainAvailability = async (req, res) => {
       "RouteId"
     );
 
-    console.log("start");
+    // console.log("start");
 
     await Promise.all(
       uniqueRoutId.map(async (routeId) => {
@@ -57,13 +61,15 @@ const checkTrainAvailability = async (req, res) => {
             .populate("RouteId")
             .populate("SeatDetailId");
 
-          console.log("from station : new", fromStationDetails.RouteOrder);
+          // console.log("from station : new", fromStationDetails.RouteOrder);
 
           const ScheduleDetail = await ScheduleMasterModel.findOne({
             RouteId: fromStationDetails.RouteId,
           })
             .populate("TrainId")
             .populate("RouteId");
+
+          // console.log("date test shedule", ScheduleDetail.Date);
 
           if (ScheduleDetail != "") {
             // console.log("inside shdule", ScheduleDetail.Date);
@@ -87,14 +93,14 @@ const checkTrainAvailability = async (req, res) => {
               // .exec();
 
               // ! Departure Time
-              console.log("Depature Time", fromStationDetails.Time);
+              // console.log("Depature Time", fromStationDetails.Time);
               // !your station
-              console.log("Your station", fromStationDetails.Station);
+              // console.log("Your station", fromStationDetails.Station);
               // ! getTrain Id
-              console.log(
-                "TrainId",
-                fromStationDetails.RouteId.TrainId.toHexString()
-              );
+              // console.log(
+              //   "TrainId",
+              //   fromStationDetails.RouteId.TrainId.toHexString()
+              // );
 
               // ! gett All classes related to the train
 
@@ -111,18 +117,23 @@ const checkTrainAvailability = async (req, res) => {
                 RouteOrder: fromStationRouteOrder,
               }).select("RouteId SeatDetailId ClassType Fair");
 
-              console.log(
-                "frm station with cls details",
-                fromStationClassDetails[0].RouteId.toHexString()
-              );
+              // console.log(
+              //   "frm station with cls details",
+              //   fromStationClassDetails[0].RouteId.toHexString()
+              // );
 
-              //!testing....
+              //!testing....  test above
 
               const From = fromStationDetails.RouteId.From;
               const To = fromStationDetails.RouteId.To;
 
+              // !testing
+              console.log("ScheduleId", ScheduleDetail._id);
+              ////!
+
               const RouteId = fromStationClassDetails[0].RouteId.toHexString();
               const TrainId = fromStationDetails.RouteId.TrainId.toHexString();
+              const ScheduleId = ScheduleDetail._id;
               const RouteOrder = fromStationDetails.RouteOrder;
               const TrainNo = classType[0].TrainId.TrainNo;
               const TrainType = classType[0].TrainId.TrainType;
@@ -134,6 +145,7 @@ const checkTrainAvailability = async (req, res) => {
               const data = {
                 RouteId,
                 TrainId,
+                ScheduleId,
                 TrainNo,
                 TrainName,
                 TrainType,
@@ -144,7 +156,6 @@ const checkTrainAvailability = async (req, res) => {
                 fromStationClassDetails,
                 RouteOrder,
               };
-
               // console.log(data);
 
               AvailabilityDetails.push(data);
@@ -336,7 +347,7 @@ const checkTrainAvailability = async (req, res) => {
 const getTrainClassDetails = async (req, res) => {
   const { routeid, trainid, Station, RouteOrder } = req.body;
 
-  console.log(routeid, trainid, Station, RouteOrder);
+  // console.log(routeid, trainid, Station, RouteOrder);
 
   const fromStationDetails = await PickupInfoModel.find({
     RouteId: routeid,
@@ -346,7 +357,7 @@ const getTrainClassDetails = async (req, res) => {
     .populate("SeatDetailId")
     .select("SeatDetailId Fair");
 
-  console.log("from details", fromStationDetails);
+  // console.log("from details", fromStationDetails);
 
   return res.status(200).send({
     message: "Class detail success...",
@@ -356,7 +367,53 @@ const getTrainClassDetails = async (req, res) => {
 };
 
 const bookingTrain = async (req, res) => {
-  const {} = req.body;
+  const { trainDetails, seatDetails } = req.body;
+  try {
+    console.log("seat details", seatDetails);
+
+    const isCardDetailExist = await CardDetailModel.findOne({
+      CardNo: req.body.enteredCardNumber.cardNumber,
+      CVVNo: req.body.enteredCardNumber.cvv,
+    });
+
+    // Extract number values from the 'selectedSeats' string
+    const seatNumbers = seatDetails.selectedSeats
+      .split(",")
+      .map((seat) => parseInt(seat));
+
+    console.log(seatNumbers); // Output: [14, 18]
+
+    // seatDetails.selectedSeats.map((detail) => {
+    //   console.log(detail);
+    // });
+
+    if (isCardDetailExist) {
+      // const bookedDetails = await BookingModel.create({
+      //!   UserId: ,
+      // ScheduleId:trainDetails.ScheduleId,
+      // TravalDate:trainDetails.depatureDate ,
+      // TrainId: trainDetails.trainId,
+      // RouteId:trainDetails.routeId,
+      //? SeatNo: [String],
+      //   Origin: trainDetails.startStation,
+      //   Destination: trainDetails.endStation,
+      //?   TotalAmount: seatDetails.totalFair,
+      // })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  // return res.status(200).send({
+  //   message: "Provided card details wrong",
+  //   data: isCardDetailExist,
+  // });
+
+  // if (!isCardDetailExist) {
+  //   return res.status(404).send({
+  //     message: "Provided card details wrong",
+  //   });
+  // }
 };
 
-module.exports = { checkTrainAvailability, getTrainClassDetails };
+module.exports = { checkTrainAvailability, getTrainClassDetails, bookingTrain };

@@ -175,9 +175,14 @@ const AdvancedSearchForm = ({ trainid, routeid }) => {
     console.log("Received from shedule form: ", data);
 
     dispatch(createTrainSchedule(data));
+
+    const params = { trainid, routeid };
+
+    //! old code
     setTimeout(() => {
-      dispatch(getScheduleDetailByRoute(routeid));
+      dispatch(getScheduleDetailByRoute(params));
     }, 1500);
+    /// !
 
     // trainid, routeid
 
@@ -229,8 +234,12 @@ const ScheduleForm = ({ trainid, routeid }) => {
   const { trainSchedules } = useSelector((state) => state.Scheduledetails);
   const dispatch = useDispatch();
 
+  const params = { trainid, routeid };
+
+  // console.log("params inside page", params);
+
   useEffect(() => {
-    dispatch(getScheduleDetailByRoute(routeid));
+    dispatch(getScheduleDetailByRoute(params));
   }, []);
 
   const { token } = theme.useToken();

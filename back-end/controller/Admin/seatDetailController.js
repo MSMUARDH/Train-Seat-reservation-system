@@ -9,21 +9,25 @@ const addSeatDetail = async (req, res) => {
 
   // console.log(req.body.trainid);
 
+  const RouteId = req.body.routeid;
   const TrainId = req.body.trainid;
-  const SeatColumn = parseInt(req.body.values.SeatColumn, 10); // 10 is the radix/base for parsing integers
-  const SeatRow = parseInt(req.body.values.SeatRow, 10);
+
+  // console.log("TrainId", TrainId);
+  // console.log("RouteId", RouteId);
+
+  // console.log(ClassType);
+
+  // const SeatColumn = parseInt(req.body.values.SeatColumn, 10); // 10 is the radix/base for parsing integers
+  // const SeatRow = parseInt(req.body.values.SeatRow, 10);
 
   try {
-    const TotalSeats = SeatColumn * SeatRow;
-
+    // !removed
+    // const TotalSeats = SeatColumn * SeatRow;
     // !ClassType Should be ClassType:ClassType (Dont change)
-
     const seatDetail = await SeatDeatil.create({
-      TrainId,
+      TrainId: TrainId,
+      RouteId: RouteId,
       ClassType: ClassType,
-      SeatColumn,
-      SeatRow,
-      TotalSeats,
     });
 
     if (seatDetail) {
@@ -104,8 +108,14 @@ const deleteSeatDetails = async (req, res) => {
 
 const getSingleClassDetail = async (req, res) => {
   const TrainId = req.params.trainid;
+  // !newly added
+  const RouteId = req.params.routeid;
+
   try {
-    const seatDetails = await SeatDeatil.find({ TrainId: TrainId });
+    const seatDetails = await SeatDeatil.find({
+      TrainId: TrainId,
+      RouteId: RouteId,
+    });
 
     if (seatDetails) {
       return res.status(200).send({

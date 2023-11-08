@@ -164,10 +164,10 @@ const Home = () => {
         }
       }
     } catch (error) {
-      if (error.response.status == 404) {
-        warningMsg(error.response.data.message);
-      }
-      // console.log(error.response.status);
+      // if (error.response.status == 404) {
+      //   warningMsg(error.response.data.message);
+      // }
+      console.log(error);
     }
 
     // console.log(date);

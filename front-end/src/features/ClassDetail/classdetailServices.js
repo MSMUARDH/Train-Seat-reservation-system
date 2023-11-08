@@ -32,9 +32,10 @@ const getAllClassDetail = async () => {
 };
 
 //? get  class detail by train id
-const getSingleclassDetailByTrain = async (trainId) => {
+const getSingleclassDetailByTrain = async (data) => {
+
   const response = await axios.get(
-    `http://localhost:5000/api/admin/get-single-seatdetails/${trainId}`
+    `http://localhost:5000/api/admin/get-single-seatdetails/${data.trainid}/${data.routeid}`
     //   {
     //   headers: {
     //     Authorization: `Bearer ${token}`,
@@ -42,7 +43,7 @@ const getSingleclassDetailByTrain = async (trainId) => {
     // }
   );
 
-  // console.log(response.data.data);
+  // // console.log(response.data.data);
   return response.data.data;
 };
 

@@ -87,6 +87,21 @@ const RouteDetailTable = ({ routeDetails }) => {
       width: 40,
     },
     {
+      //////////////////////////////! Class Details
+      title: "Actions",
+      dataIndex: "actions",
+      render: (text, record) => (
+        <Button
+          onClick={() =>
+            navigate(`/admin/class-detail/${record.TrainId}/${record._id}`)
+          }
+        >
+          Add Class Detail
+        </Button>
+      ),
+      width: 40,
+    },
+    {
       title: "Actions",
       dataIndex: "actions",
       render: (text, record) => (
@@ -113,7 +128,6 @@ const RouteDetailTable = ({ routeDetails }) => {
       scroll={{
         y: 350,
       }}
-      
       key={(_, record) => record._id}
       // rowKey={(text, record) => record._id} // Replace "id" with the actual unique key property
     />

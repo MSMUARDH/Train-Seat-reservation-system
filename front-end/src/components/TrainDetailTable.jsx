@@ -53,16 +53,16 @@ const TrainDetailTable = (prop) => {
       width: 20,
     },
 
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      render: (text, record) => (
-        <Button onClick={() => navigate(`/admin/class-detail/${record._id}`)}>
-          Add Class Detail
-        </Button>
-      ),
-      width: 40,
-    },
+    // {
+    //   title: "Actions",
+    //   dataIndex: "actions",
+    //   render: (text, record) => (
+    //     <Button onClick={() => navigate(`/admin/class-detail/${record._id}`)}>
+    //       Add Class Detail
+    //     </Button>
+    //   ),
+    //   width: 40,
+    // },
     {
       title: "Actions",
       dataIndex: "actions",

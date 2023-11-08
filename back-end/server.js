@@ -9,9 +9,17 @@ const jwt = require("jsonwebtoken");
 const User = require("./model/UserModel");
 
 app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:4511", // Replace with your frontend URL
+    methods: "GET,POST,PUT,DELETE", // Specify the HTTP methods you want to allow
+    allowedHeaders: "Content-Type, Authorization", // Specify the headers you want to allow
+  })
+);
 
 const userRoutes = require("./routes/userRoute");
 const adminRoutes = require("./routes/adminRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 app.use(express.json());
 
@@ -22,6 +30,7 @@ app.use(express.json());
 
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // !below code authorization
 // app.get("/post", authenticateToken, (req, res) => {

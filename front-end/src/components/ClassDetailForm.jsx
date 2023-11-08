@@ -21,7 +21,7 @@ import {
 } from "../features/ClassDetail/classdetailSlice";
 import ClassDetailTable from "./ClassDetailTable";
 const { Option } = Select;
-const AdvancedSearchForm = ({ trainid }) => {
+const AdvancedSearchForm = ({ trainid, routeid }) => {
   // const [trigger, setTrigger] = useState(false);
   const dispatch = useDispatch();
 
@@ -84,7 +84,7 @@ const AdvancedSearchForm = ({ trainid }) => {
   const postSeatDetails = async (values) => {
     console.log("Received values of form: ", values.SeatColumn);
 
-    const data = { trainid, values };
+    const data = { trainid, routeid, values };
 
     dispatch(createClassDetails(data));
 
@@ -132,12 +132,14 @@ const AdvancedSearchForm = ({ trainid }) => {
     </Form>
   );
 };
-const ClassDetailForm = ({ trainid, data }) => {
+const ClassDetailForm = ({ trainid, routeid, data }) => {
   const { classdetails } = useSelector((state) => state.Classdetails);
   const dispatch = useDispatch();
 
+  const paramData = { trainid, routeid };
+
   useEffect(() => {
-    dispatch(getSingleclassDetailByTrain(trainid));
+    dispatch(getSingleclassDetailByTrain(paramData));
   }, []);
 
   const { token } = theme.useToken();
@@ -150,7 +152,7 @@ const ClassDetailForm = ({ trainid, data }) => {
   };
   return (
     <>
-      <AdvancedSearchForm trainid={trainid} />
+      <AdvancedSearchForm trainid={trainid} routeid={routeid} />
 
       <div style={listStyle}>
         <ClassDetailTable classdetails={classdetails} />

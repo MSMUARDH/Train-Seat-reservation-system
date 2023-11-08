@@ -2,16 +2,37 @@ const mongoose = require("mongoose");
 
 const BookingMasterSchema = new mongoose.Schema({
   // * BookingId
-  TrainId: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
   UserId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  PNRNo: {
+    type: String,
+    unique: true, // Ensures uniqueness
+  },
   ScheduleId: { type: mongoose.Schema.Types.ObjectId, ref: "TrainSchedule" },
-  BoardingId: { type: mongoose.Schema.Types.ObjectId, ref: "Pickupstandinfo" },
-  SeatNo: Number,
   TravalDate: Date,
+  TrainId: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
+  RouteId: { type: mongoose.Schema.Types.ObjectId, ref: "RouteDetail" },
+  SeatNo: [String],
+
+  BoardingId: { type: mongoose.Schema.Types.ObjectId, ref: "Pickupstandinfo" },
 
   Origin: String,
   Destination: String,
+  TotalAmount: {
+    type: Number,
+    required: true,
+  },
+  createdDate: {
+    type: Date,
+    default: Date.now, // Set the default value to the current date and time
+  },
+});
+
+BookingMasterSchema.pre("save", async function (next) {
+  if (!this.PNRNo) {
+    // Generate PNR number as a combination of a static string and a unique identifier
+    this.PNRNo = `PNR-${Math.floor(100000 + Math.random() * 900000)}`;
+  }
+  next();
 });
 
 module.exports = mongoose.model("BookingMaster", BookingMasterSchema);
-``

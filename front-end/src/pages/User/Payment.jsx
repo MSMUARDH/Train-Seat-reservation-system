@@ -9,18 +9,22 @@ import handleApiCall from "../../api/handleApiCall";
 import CommonNotification from "../../components/common/CommonNotification";
 import axios from "axios";
 
-const Payment = ({
-  // setBookingState,
-  bookingValues,
-  // handleGetReservationCount,
-}) => {
+const Payment = ({ bookingValues }) => {
   const [enteredCardNumber, setEnteredCardNumber] = useState({
-    cardType: 1,
+    cardType: "",
     fullName: "",
     cardNumber: "",
     expiry: "",
-    cvv: 123,
+    cvv: "",
   });
+
+  const trainDetails = JSON.parse(localStorage.getItem("TRAIN_SELECTION"));
+  const seatDetails = JSON.parse(
+    atob(localStorage.getItem("SEAT_SELECTION_1"))
+  );
+
+  // console.log("TRAIN_SELECTION", trainDetails);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isFinalStep, setIsFinalStep] = useState(false);
   const { Countdown } = Statistic;
@@ -63,13 +67,13 @@ const Payment = ({
             {/* //! */}
             <div className="w-full mt-5 ml-2 p-6 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-0 dark:bg-gray-800 dark:border-gray-700">
               <p className=" text-base text-gray-500 sm:text-lg dark:text-gray-400">
-                <div>
+                <p>
                   Total LKR:{" "}
                   {
                     JSON.parse(atob(localStorage.getItem("SEAT_SELECTION_1")))
                       .totalFair
                   }
-                </div>
+                </p>
               </p>
             </div>
             {/* //! */}
@@ -82,31 +86,51 @@ const Payment = ({
                   ...changedValues,
                 });
               }}
-              onSubmit={() => {
-                setIsLoading(true);
-                // manipulate api call here
-                setTimeout(() => {
-                  // !testing
-                  const test = true;
+              onSubmit={async () => {
+                console.log(enteredCardNumber);
 
-                  //! const response = axios.post()
+                // setIsLoading(true);
+                // // manipulate api call here
+                // setTimeout(() => {
+                //   // !testing
+                //   const test = true;
 
-                  if (test) {
-                    setIsFinalStep(true);
-                    notificationRef.current.openNotification({
-                      message: "Payment Successful",
-                      description: "Your reservation was successful",
-                      type: "success",
-                    });
-                    // handleGetReservationCount();
-                  } else {
-                    notificationRef.current.openNotification({
-                      message: "Payment Failed",
-                      description: "Try again later",
-                      type: "error",
-                    });
-                  }
-                }, 2000);
+                const trainDetails = JSON.parse(
+                  localStorage.getItem("TRAIN_SELECTION")
+                );
+
+                const seatDetails = JSON.parse(
+                  atob(localStorage.getItem("SEAT_SELECTION_1"))
+                );
+
+                console.log("train from payment trainDetails", trainDetails);
+                console.log("train from payment seatDetails", seatDetails);
+
+                const data = { enteredCardNumber, trainDetails, seatDetails };
+
+                const response = await axios.post(
+                  "http://localhost:5000/api/user/ticket-booking",
+                  data
+                );
+
+                // console.log(response);
+
+                //   if (test) {
+                //     setIsFinalStep(true);
+                //     notificationRef.current.openNotification({
+                //       message: "Payment Successful",
+                //       description: "Your reservation was successful",
+                //       type: "success",
+                //     });
+                //     // handleGetReservationCount();
+                //   } else {
+                //     notificationRef.current.openNotification({
+                //       message: "Payment Failed",
+                //       description: "Try again later",
+                //       type: "error",
+                //     });
+                //   }
+                // }, 2000);
               }}
               formItemClassName="w-full p-2 booking-form-item lg:h-[5.5rem]"
               className="flex lg:flex-row flex-wrap items-center justify-between"
@@ -134,10 +158,16 @@ const Payment = ({
                     className="w-12"
                   />
 
-                  {enteredCardNumber.cardType === 1 ? (
-                    <FaCcVisa className="text-[2.5rem]" />
+                  {enteredCardNumber.cardType === "VISA" ? (
+                    <FaCcVisa
+                      onClick={() => console.log("Visa Clicked")}
+                      className="text-[2.5rem]"
+                    />
                   ) : (
-                    <FaCcMastercard className="text-[2.5rem]" />
+                    <FaCcMastercard
+                      onClick={() => console.log("master Clicked")}
+                      className="text-[2.5rem]"
+                    />
                   )}
                 </div>
 

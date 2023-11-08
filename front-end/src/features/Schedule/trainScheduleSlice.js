@@ -48,9 +48,9 @@ export const getAllScheduleDetail = createAsyncThunk(
 //? get a single item
 export const getScheduleDetailByRoute = createAsyncThunk(
   "trainschedule/getAll",
-  async (routeId, thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
-      return await scheduledetailService.getScheduleDetailByRoute(routeId);
+      return await scheduledetailService.getScheduleDetailByRoute(params);
     } catch (error) {
       const message =
         (error.response &&

@@ -3,18 +3,10 @@ const mongoose = require("mongoose");
 const SeatDetailSchema = new mongoose.Schema({
   // * SeatDetailId
   TrainId: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
+  RouteId: { type: mongoose.Schema.Types.ObjectId, ref: "RouteDetail" },
 
   ClassType: {
     type: String,
-    required: true,
-  },
-  SeatColumn: {
-    type: Number,
-    required: true,
-  },
-
-  SeatRow: {
-    type: Number,
     required: true,
   },
 
@@ -39,8 +31,23 @@ const SeatDetailSchema = new mongoose.Schema({
 });
 
 //? Define a compound unique index for TrainId and ClassType
-SeatDetailSchema.index({ TrainId: 1, ClassType: 1 }, { unique: true });
+SeatDetailSchema.index(
+  { TrainId: 1, RouteId: 1, ClassType: 1 },
+  { unique: true }
+);
 
-// const SeatDetailModel = mongoose.model("SeatDetail", SeatDetailSchema);
+SeatDetailSchema.pre("save", function (next) {
+  if (this.ClassType === "3rd Class") {
+    this.TotalSeats = 60;
+  } else {
+    this.TotalSeats = 40;
+  }
+  next();
+});
+
+SeatDetailSchema.pre("save", function (next) {
+  this.AvailableSeats = this.TotalSeats - this.BookedSeats;
+  next();
+});
 
 module.exports = mongoose.model("SeatDetail", SeatDetailSchema);

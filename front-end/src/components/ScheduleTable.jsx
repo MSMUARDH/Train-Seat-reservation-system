@@ -22,16 +22,23 @@ const ScheduleTable = ({ trainSchedules }) => {
     {
       title: "Date",
       dataIndex: "Date",
+      render: (text, record) => <p>{record.Date?.split("T")[0]}</p>,
       width: 20,
     },
     {
       title: "DepatureTime",
       dataIndex: "DepatureTime",
+      render: (text, record) => (
+        <p>{record.DepatureTime?.split("T")[1].split(".")[0]}</p>
+      ),
       width: 20,
     },
     {
       title: "ArrivalTime",
       dataIndex: "ArrivalTime",
+      render: (text, record) => (
+        <p>{record.ArrivalTime?.split("T")[1].split(".")[0]}</p>
+      ),
       width: 20,
     },
     {

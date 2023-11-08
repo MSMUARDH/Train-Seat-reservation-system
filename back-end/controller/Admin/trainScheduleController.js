@@ -161,82 +161,21 @@ const addTrainSchedule = async (req, res) => {
 
 const getScheduleDetailByRoute = async (req, res) => {
   const routeid = req.params.routeid;
+  const trainid = req.params.trainid;
+
   try {
-    const trainScheduleDetail = await TrainSchedule.find({ RouteId: routeid });
+    const trainScheduleDetail = await TrainSchedule.find({
+      RouteId: routeid,
+      TrainId: trainid,
+    });
 
-    if (trainScheduleDetail) {
-      //! new code
-      const trainSchedules = await TrainSchedule.find({ RouteId: routeid });
+    return res.status(200).send({
+      message: "Train Schedule provided successfully...",
+      success: true,
+      data: trainScheduleDetail,
+    });
 
-      if (trainSchedules != "") {
-        // Create a formattedTrainSchedules array to store formatted data
-        const formattedTrainSchedules = trainSchedules.map((schedule) => {
-          // Format date and time here
 
-          // console.log(schedule.Date);
-          const fotmattedDate = new Date(schedule.Date);
-
-          // console.log(fotmattedDate.getDate());
-          // console.log(fotmattedDate.getMonth() + 1);
-          // console.log(fotmattedDate.getUTCFullYear());
-
-          const frmtdt = `${fotmattedDate.getDate()}-${
-            fotmattedDate.getMonth() + 1
-          }-${fotmattedDate.getUTCFullYear()}`;
-
-          // console.log(frmtdt);
-
-          // console.log(schedule.DepatureTime);
-          // console.log(schedule.ArrivalTime);
-
-          const formatTime = (dateTimeString) => {
-            const startIndex = dateTimeString.indexOf("T") + 1;
-            const endIndex = dateTimeString.indexOf(".");
-
-            const timePart = dateTimeString.substring(startIndex, endIndex);
-            return timePart.toString();
-          };
-
-          const formattedDepatureTime = formatTime(
-            JSON.stringify(schedule.DepatureTime)
-          );
-          const formattedArrivalTime = formatTime(
-            JSON.stringify(schedule.ArrivalTime)
-          );
-
-          // const { TrainId, RouteId, EstimatedTime } = schedule;
-
-          return {
-            _id: schedule._id,
-            TrainId: schedule.TrainId,
-            RouteId: schedule.RouteId,
-            Date: frmtdt,
-            DepatureTime: formattedDepatureTime,
-            ArrivalTime: formattedArrivalTime,
-            EstimatedTime: schedule.EstimatedTime,
-          };
-        });
-
-        return res.status(200).send({
-          message: "Train Schedule provided successfully...",
-          success: true,
-          data: formattedTrainSchedules,
-        });
-      } else {
-        return res.status(404).send({
-          message: "No train schedules found.",
-          success: false,
-          data: "",
-        });
-      }
-
-      // !old return
-      // return res.status(200).send({
-      //   message: "Seat details of this train provided successfully...",
-      //   success: true,
-      //   data: trainScheduleDetail,
-      // });
-    }
   } catch (error) {
     return res.status(400).send({
       message: error.message,
