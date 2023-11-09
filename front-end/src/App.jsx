@@ -42,6 +42,8 @@ import TermssndConditionsPage from "./pages/User/TermssndConditionsPage";
 import UserProfile from "./pages/User/UserProfile";
 import TrainScheduleCheckPage from "./pages/User/TrainScheduleCheckPage";
 
+import Navigation from "./components/User/Navigation";
+
 // import HomePage from "./pages/User/HomePage";
 
 function App() {
@@ -56,8 +58,13 @@ function App() {
           /> */}
         </Route>
         <Route path="/admin" element={<AdminHome />} errorElement={<Error />} />
+        <Route path="/nav" element={<Navigation />}/>
         {/* /////////////////////////////////////////////////////////// */}
-        <Route path="/user/home" element={<Home />} errorElement={<Error />} />
+          <Route
+            path="/user/home"
+            element={<Home />}
+            errorElement={<Error />}
+          />
         {/* RailwayHistory */}
         <Route
           path="/user/railway-history"
