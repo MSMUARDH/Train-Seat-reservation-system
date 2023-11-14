@@ -1,0 +1,72 @@
+.heading {
+    position: absolute;
+    z-index: 99;
+    margin: 200px 0px 0px 100px;
+    color: white;
+}
+
+.heading-text {
+    font-size: 58px;
+    font-weight: 600;
+}
+
+.sub-heading-text {
+    font-size: 32px;
+}
+
+.Carousel img {
+    height: 50%;
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
+}
+
+/* CSS */
+.button-46 {
+    color: white;
+    padding: 10px;
+    align-items: center;
+    background-color: rgba(240, 240, 240, 0.26);
+    border: 1px solid #dfdfdf;
+    border-radius: 16px;
+    box-sizing: border-box;
+    color: #000000;
+    cursor: pointer;
+    display: flex;
+    font-family: Inter, sans-serif;
+    font-size: 18px;
+    justify-content: center;
+    line-height: 28px;
+    max-width: 40%;
+    padding: 14px 22px;
+    text-decoration: none;
+    transition: all 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100%;
+}
+
+.button-46:active,
+.button-46:hover {
+    outline: 0;
+}
+
+.button-46:hover {
+    background-color: #ffffff;
+    border-color: rgba(0, 0, 0, 0.19);
+}
+
+@media (min-width: 768px) {
+    .button-46 {
+        font-size: 20px;
+        min-width: 200px;
+        padding: 14px 16px;
+    }
+}
+
+.fixed-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}

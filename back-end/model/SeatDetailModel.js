@@ -10,11 +10,6 @@ const SeatDetailSchema = new mongoose.Schema({
     required: true,
   },
 
-  TotalSeats: {
-    type: Number,
-    reaquired: true,
-    // default: SeatColumn * SeatRow,
-  },
   BookedSeats: {
     type: Number,
     default: 0,
@@ -23,10 +18,10 @@ const SeatDetailSchema = new mongoose.Schema({
     type: Number,
     virtual: true, // This marks it as a virtual property
     default: 0,
-    get: function () {
-      // Calculate AvailableSeats based on TotalSeats and BookedSeats
-      return this.TotalSeats - this.BookedSeats;
-    },
+    // get: function () {
+    //   // Calculate AvailableSeats based on TotalSeats and BookedSeats
+    //   return this.TotalSeats - this.BookedSeats;
+    // },
   },
 });
 

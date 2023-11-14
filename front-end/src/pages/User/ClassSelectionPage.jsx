@@ -16,6 +16,7 @@ import ThirdClassSeatSelection from "../../components/User/ThirdClassSeatSelecti
 
 const ClassSelectionPage = () => {
   const navigate = useNavigate();
+  const [seatSelection, setSeatSelection] = useState(null);
 
   const trainState = JSON.parse(localStorage.getItem("TRAIN_SELECTION"));
 
@@ -25,7 +26,7 @@ const ClassSelectionPage = () => {
   // !test
   const [openFirstClassModal, setOpenFirstClassModal] = useState(false);
   const [openSecondClassModal, setOpenSecondClassModal] = useState(false);
-  const [openThirdClassModal, setOpenThiredClassModal] = useState(false);
+  const [openThirdClassModal, setOpenThirdClassModal] = useState(false);
 
   const [FirstClassFair, setFirstClassFiar] = useState("");
   const [SecondClassFair, setSecondClassFiar] = useState("");
@@ -74,16 +75,10 @@ const ClassSelectionPage = () => {
   };
 
   // !handleCheckout
-
   const handleCheckout = () => {
     const isTrainDetailExist = localStorage.getItem("TRAIN_SELECTION");
-    const isSeatDetailExist = localStorage.getItem("SEAT_SELECTION_1");
 
-    if (
-      isTrainDetailExist == null ||
-      isSeatDetailExist == null ||
-      radioValue == ""
-    ) {
+    if (isTrainDetailExist == null || seatDetails == null || radioValue == "") {
       console.log("you can't checkout");
     } else {
       navigate("/user/payment");
@@ -94,6 +89,19 @@ const ClassSelectionPage = () => {
   useEffect(() => {
     getClassDetails();
   }, []);
+
+  //!testing
+
+  useEffect(() => {
+    const seatSelectionData = JSON.parse(
+      localStorage.getItem("SEAT_SELECTION")
+    );
+    if (seatSelectionData) {
+      setSeatSelection(seatSelectionData);
+    }
+  }, [openFirstClassModal, openSecondClassModal, openThirdClassModal]); // This will run once when the component mounts to reflect the initial value from localStorage
+
+  //! /////
 
   return (
     <div>
@@ -116,17 +124,31 @@ const ClassSelectionPage = () => {
                   }}
                   bordered={false}
                   onClick={() => {
-                    seatDetail.SeatDetailId.ClassType == "1st Class"
-                      ? setOpenFirstClassModal(true)
-                      : seatDetail.SeatDetailId.ClassType == "2nd Class"
-                      ? setOpenSecondClassModal(true)
-                      : setOpenThirdClassModal(true);
+                    if (seatDetail.SeatDetailId.ClassType == "1st Class") {
+                      setOpenFirstClassModal(true);
+                      setFirstClassFiar(seatDetail.Fair);
+                    } else if (
+                      seatDetail.SeatDetailId.ClassType == "2nd Class"
+                    ) {
+                      setOpenSecondClassModal(true);
+                      setSecondClassFiar(seatDetail.Fair);
+                    } else if (
+                      seatDetail.SeatDetailId.ClassType == "3rd Class"
+                    ) {
+                      setOpenThirdClassModal(true);
+                      setThirdClassFiar(seatDetail.Fair);
+                    }
+                    // seatDetail.SeatDetailId.ClassType == "1st Class"
+                    //   ? setOpenFirstClassModal(true)
+                    //   : seatDetail.SeatDetailId.ClassType == "2nd Class"
+                    //   ? setOpenSecondClassModal(true)
+                    //   : setOpenThirdClassModal(true);
 
-                    seatDetail.SeatDetailId.ClassType == "1st Class"
-                      ? setFirstClassFiar(seatDetail.Fair)
-                      : seatDetail.SeatDetailId.ClassType == "2nd Class"
-                      ? setSecondClassFiar(seatDetail.Fair)
-                      : setThirdClassFiar(seatDetail.Fair);
+                    // seatDetail.SeatDetailId.ClassType == "1st Class"
+                    //   ? setFirstClassFiar(seatDetail.Fair)
+                    //   : seatDetail.SeatDetailId.ClassType == "2nd Class"
+                    //   ? setSecondClassFiar(seatDetail.Fair)
+                    //   : setThirdClassFiar(seatDetail.Fair);
 
                     // console.log("clg fair", seatDetail.Fair);
                   }}
@@ -169,7 +191,7 @@ const ClassSelectionPage = () => {
       <ThirdClassSeatSelection
         Fair={ThirdClassFair}
         open={openThirdClassModal}
-        onClose={() => setOpenThiredClassModal(false)}
+        onClose={() => setOpenThirdClassModal(false)}
       />
 
       <Card className="train-details-card" title="Summary">
@@ -212,18 +234,18 @@ const ClassSelectionPage = () => {
 
             <tr>
               <th>No of Passengers</th>
-              <td>Passenger count here</td>
+              <td>{seatSelection?.selectedSeats.length}</td>
             </tr>
 
             <tr>
               <th>Train Class</th>
-              <td>Train Class here</td>
+              <td>{seatSelection?.class}</td>
             </tr>
 
             <tr>
               <th>Price</th>
               <td>
-                <Tag color="green">Price here</Tag>
+                <Tag color="red">LKR {seatSelection?.totalFair}</Tag>
               </td>
             </tr>
           </table>

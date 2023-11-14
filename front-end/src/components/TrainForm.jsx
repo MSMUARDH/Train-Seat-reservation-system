@@ -146,7 +146,7 @@ const AdvancedSearchForm = () => {
               rules={[
                 {
                   required: true,
-                  message: "Select something!",
+                  message: "Select Train Type",
                 },
               ]}
               initialValue=""
@@ -168,7 +168,7 @@ const AdvancedSearchForm = () => {
               rules={[
                 {
                   required: true,
-                  message: "this field is required",
+                  message: "This field is required",
                 },
               ]}
             >
@@ -183,7 +183,7 @@ const AdvancedSearchForm = () => {
               rules={[
                 {
                   required: true,
-                  message: "this field is required",
+                  message: "This field is required",
                 },
               ]}
             >

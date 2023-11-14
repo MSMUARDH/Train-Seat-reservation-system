@@ -34,7 +34,6 @@ const checkTrainAvailability = async (req, res) => {
       uniqueRoutId.map(async (routeId) => {
         // console.log(routeId.toHexString());
 
-        // ! 1.initially check for the from station and take the RouteId of them
         const fromStationRouteOrder = await PickupInfoModel.find({
           RouteId: routeId,
           Station: From,
@@ -42,7 +41,6 @@ const checkTrainAvailability = async (req, res) => {
 
         // console.log("from station", fromStationRouteOrder);
 
-        // ! 2. check for the to station
         const toStationRouteOrder = await PickupInfoModel.find({
           RouteId: routeId,
           Station: To,
@@ -367,39 +365,126 @@ const getTrainClassDetails = async (req, res) => {
 };
 
 const bookingTrain = async (req, res) => {
-  const { trainDetails, seatDetails } = req.body;
+  const { trainDetails, seatSelection } = req.body;
+
   try {
-    console.log("seat details", seatDetails);
+    console.log("seat Selection details", seatSelection);
 
     const isCardDetailExist = await CardDetailModel.findOne({
       CardNo: req.body.enteredCardNumber.cardNumber,
       CVVNo: req.body.enteredCardNumber.cvv,
     });
 
+    if (!isCardDetailExist) {
+      return res.status(404).json({ message: "Invalid Card details" });
+    }
+
     // Extract number values from the 'selectedSeats' string
-    const seatNumbers = seatDetails.selectedSeats
-      .split(",")
-      .map((seat) => parseInt(seat));
 
-    console.log(seatNumbers); // Output: [14, 18]
+    console.log("trainDetails", trainDetails);
 
-    // seatDetails.selectedSeats.map((detail) => {
-    //   console.log(detail);
+    // ! dont need to convert selected seat
+    // const seatNumbers = seatSelection.selectedSeats
+    //   .split(",")
+    //   .map((seat) => parseInt(seat));
+    // console.log(seatNumbers); // Output: [14, 18]seat
+    // !
+
+    // !seat count to ruduce from the total count
+    console.log("seat count", seatSelection.selectedSeats.length);
+
+    // console.log("testing", {
+    //   RouteId: trainDetails.routeId,
+    //   TrainId: trainDetails.trainId,
+    //   ClassType: seatSelection.class,
     // });
 
-    if (isCardDetailExist) {
-      // const bookedDetails = await BookingModel.create({
-      //!   UserId: ,
-      // ScheduleId:trainDetails.ScheduleId,
-      // TravalDate:trainDetails.depatureDate ,
-      // TrainId: trainDetails.trainId,
-      // RouteId:trainDetails.routeId,
-      //? SeatNo: [String],
-      //   Origin: trainDetails.startStation,
-      //   Destination: trainDetails.endStation,
-      //?   TotalAmount: seatDetails.totalFair,
-      // })
+    const classDetails = await ClassDetailModel.findOne({
+      RouteId: trainDetails.routeId,
+      TrainId: trainDetails.trainId,
+      ClassType: seatSelection.class,
+    });
+
+    // console.log("BookedSeats", classDetails.BookedSeats);
+    // console.log("AvailableSeats", classDetails.AvailableSeats);
+    // console.log("TotalSeats", classDetails.TotalSeats);
+
+    // // Split the original string into day, month, and year parts
+    const [day, month, year] = trainDetails.depatureDate.split("-");
+
+    // Create a new Date object in the format YYYY-MM-DD
+    const formattedTravalDate = new Date(`${year}-${month}-${day}`);
+
+    console.log(formattedTravalDate);
+
+    // !testing
+
+    if (isCardDetailExist && classDetails) {
+      await BookingModel.create({
+        UserId: "654b43522f3020a526b6f42c",
+        ScheduleId: trainDetails.ScheduleId,
+        TravalDate: formattedTravalDate,
+        TrainId: trainDetails.trainId,
+        RouteId: trainDetails.routeId,
+        BookedSeatNo: seatSelection.selectedSeats,
+        // * we can add the Passenger count here
+        Origin: trainDetails.startStation,
+        ClassType: seatSelection.class,
+        Destination: trainDetails.endStation,
+        TotalAmount: seatSelection.totalFair,
+      })
+        .then(async (bookedDetails) => {
+          console.log("Booking created successfully:", bookedDetails);
+          // Do something with the created booking details
+
+          let updatedBookedSeat =
+            classDetails.BookedSeats + seatSelection.selectedSeats.length;
+          let updatedAvailableSeats =
+            classDetails.AvailableSeats - seatSelection.selectedSeats.length;
+
+          // console.log(updatedBookedSeat, updatedAvailableSeats, updatedTotalSeats);
+
+          const updatedClassDetail = await ClassDetailModel.findByIdAndUpdate(
+            classDetails._id,
+
+            {
+              BookedSeats: updatedBookedSeat,
+              AvailableSeats: updatedAvailableSeats,
+            }
+          );
+
+          if (updatedClassDetail) {
+            return res.status(200).send({
+              message: "Seat reservation successful...",
+              data: bookedDetails,
+            });
+            // console.log("updatedClassDetail", updatedClassDetail);
+          }
+        })
+        .catch((error) => {
+          console.error("Error creating booking:", error);
+          // Handle errors during booking creation
+        });
     }
+
+    //!
+
+    // if (isCardDetailExist) {
+    //   const bookedDetails = await BookingModel.create({
+    //     UserId: "654b43522f3020a526b6f42c",
+    //     ScheduleId: trainDetails.ScheduleId,
+    //     TravalDate: formattedTravalDate,
+    //     TrainId: trainDetails.trainId,
+    //     RouteId: trainDetails.routeId,
+    //     BookedSeatNo: seatNumbers,
+    //     Origin: trainDetails.startStation,
+    //     ClassType: seatDetails.class,
+    //     Destination: trainDetails.endStation,
+    //     TotalAmount: seatDetails.totalFair,
+    //   });
+
+    //   console.log("Booking created succes", bookedDetails);
+    // }
   } catch (error) {
     console.log(error);
   }
@@ -416,4 +501,41 @@ const bookingTrain = async (req, res) => {
   // }
 };
 
-module.exports = { checkTrainAvailability, getTrainClassDetails, bookingTrain };
+const getBookedSeatDetails = async (req, res) => {
+  const { ScheduleId, trainId, routeId, classtype } = req.body;
+
+  console.log(ScheduleId, trainId, routeId, classtype);
+
+  // ?get already  booked seat detail logic
+  const bookedseatDetails = await BookingModel.find({
+    TrainId: trainId,
+    RouteId: routeId,
+    ScheduleId: ScheduleId,
+    ClassType: classtype,
+  });
+
+  // Create an array to collect all BookedSeatNo values
+  const allBookedSeats = [];
+
+  // Loop through the bookings and collect BookedSeatNo values
+  bookedseatDetails.forEach((booking) => {
+    allBookedSeats.push(...booking.BookedSeatNo);
+  });
+
+  // Convert string array elements to numbers
+  const convertedAllBookedSeats = allBookedSeats.map(Number);
+
+  console.log(convertedAllBookedSeats);
+
+  return res.status(200).send({
+    success: true,
+    BookedSeats: convertedAllBookedSeats,
+  });
+};
+
+module.exports = {
+  checkTrainAvailability,
+  getTrainClassDetails,
+  bookingTrain,
+  getBookedSeatDetails,
+};

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CommonForm } from "../../components";
 import data from "../../data/components/payment";
 import { FaCcVisa, FaCcMastercard } from "react-icons/fa";
@@ -8,8 +8,14 @@ import { Result, Button, Statistic } from "antd";
 import handleApiCall from "../../api/handleApiCall";
 import CommonNotification from "../../components/common/CommonNotification";
 import axios from "axios";
+import { useNavigate } from "react-router";
+import QRCode from "qrcode";
 
-const Payment = ({ bookingValues }) => {
+const Payment = () => {
+  const navigate = useNavigate();
+  // const [seatSelection, setSeatSelection] = useState(null);
+  // const [trainDetails, setTrainDetails] = useState(null);
+  const [imageUrl, setImageUrl] = useState();
   const [enteredCardNumber, setEnteredCardNumber] = useState({
     cardType: "",
     fullName: "",
@@ -18,12 +24,26 @@ const Payment = ({ bookingValues }) => {
     cvv: "",
   });
 
-  const trainDetails = JSON.parse(localStorage.getItem("TRAIN_SELECTION"));
-  const seatDetails = JSON.parse(
-    atob(localStorage.getItem("SEAT_SELECTION_1"))
-  );
+  //!testing
 
-  // console.log("TRAIN_SELECTION", trainDetails);
+  const seatSelection = JSON.parse(localStorage.getItem("SEAT_SELECTION"));
+  const trainDetails = JSON.parse(localStorage.getItem("TRAIN_SELECTION"));
+
+  //! /////
+
+  // ! generate QR code  -  testing
+
+  const genarateQrCode = async () => {
+    try {
+      const response = await QRCode.toDataURL("testing");
+      setImageUrl(response);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //!
 
   const [isLoading, setIsLoading] = useState(false);
   const [isFinalStep, setIsFinalStep] = useState(false);
@@ -39,16 +59,22 @@ const Payment = ({ bookingValues }) => {
           <div>
             <Button
               icon={<BsFillArrowLeftCircleFill className="text-sky-600 mt-1" />}
-              // onClick={() => setBookingState(0)}
+              onClick={() => genarateQrCode()}
             >
               Go to search
             </Button>
+
+            {imageUrl ? (
+              <a href={imageUrl} download>
+                <img src={imageUrl} alt="img" />
+              </a>
+            ) : null}
             <div className="text-[0.8rem] mt-6">
               You will redirect to search within{" "}
               <Countdown
                 format="ss"
-                value={Date.now() + 11 * 1000}
-                // onFinish={() => setBookingState(0)}
+                value={Date.now() + 5 * 1000}
+                // onFinish={() => navigate("/user/home")}
               />
             </div>
           </div>
@@ -67,13 +93,7 @@ const Payment = ({ bookingValues }) => {
             {/* //! */}
             <div className="w-full mt-5 ml-2 p-6 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-0 dark:bg-gray-800 dark:border-gray-700">
               <p className=" text-base text-gray-500 sm:text-lg dark:text-gray-400">
-                <p>
-                  Total LKR:{" "}
-                  {
-                    JSON.parse(atob(localStorage.getItem("SEAT_SELECTION_1")))
-                      .totalFair
-                  }
-                </p>
+                <p>Total LKR: {seatSelection?.totalFair}</p>
               </p>
             </div>
             {/* //! */}
@@ -87,50 +107,85 @@ const Payment = ({ bookingValues }) => {
                 });
               }}
               onSubmit={async () => {
-                console.log(enteredCardNumber);
+                console.log("entered card number", enteredCardNumber);
 
-                // setIsLoading(true);
-                // // manipulate api call here
-                // setTimeout(() => {
-                //   // !testing
-                //   const test = true;
+                try {
+                  console.log("train from payment trainDetails", trainDetails);
+                  console.log("train from payment seatDetails", seatSelection);
 
-                const trainDetails = JSON.parse(
-                  localStorage.getItem("TRAIN_SELECTION")
-                );
+                  const data = {
+                    enteredCardNumber,
+                    trainDetails,
+                    seatSelection,
+                  };
 
-                const seatDetails = JSON.parse(
-                  atob(localStorage.getItem("SEAT_SELECTION_1"))
-                );
+                  console.log("data to post", data);
 
-                console.log("train from payment trainDetails", trainDetails);
-                console.log("train from payment seatDetails", seatDetails);
+                  const response = await axios.post(
+                    "http://localhost:5000/api/user/ticket-booking",
+                    data
+                  );
 
-                const data = { enteredCardNumber, trainDetails, seatDetails };
+                  console.log();
 
-                const response = await axios.post(
-                  "http://localhost:5000/api/user/ticket-booking",
-                  data
-                );
+                  setIsLoading(true);
 
-                // console.log(response);
+                  if (response.status == 200) {
+                    setTimeout(() => {
+                      setIsLoading(false);
+                      notificationRef.current.openNotification({
+                        message: "Payment Successful",
+                        description: "Your reservation was successful",
+                        type: "success",
+                      });
 
-                //   if (test) {
-                //     setIsFinalStep(true);
-                //     notificationRef.current.openNotification({
-                //       message: "Payment Successful",
-                //       description: "Your reservation was successful",
-                //       type: "success",
-                //     });
-                //     // handleGetReservationCount();
-                //   } else {
-                //     notificationRef.current.openNotification({
-                //       message: "Payment Failed",
-                //       description: "Try again later",
-                //       type: "error",
-                //     });
-                //   }
-                // }, 2000);
+                      localStorage.removeItem("SEAT_SELECTION");
+                      localStorage.removeItem("TRAIN_SELECTION");
+
+                      // Code to run after fully finishing 2 seconds
+                    }, 2000);
+
+                    setTimeout(() => {
+                      setIsLoading(false);
+                      setIsFinalStep(true);
+                      // Code to run after fully finishing 2 seconds
+                    }, 3000);
+
+                    // setTimeout(() => {
+                    //   setIsFinalStep(true);
+                    // }, 2000);
+                    // notificationRef.current.openNotification({
+                    //   message: "Payment Successful",
+                    //   description: "Your reservation was successful",
+                    //   type: "success",
+                    // });
+                  }
+                } catch (error) {
+                  console.log(error);
+
+                  setIsLoading(true);
+
+                  setTimeout(() => {
+                    setIsLoading(false);
+
+                    // Code to run after fully finishing 2 seconds
+                    notificationRef.current.openNotification({
+                      message: "Invalid Payment Details",
+                      description: "Please provide correct payment details!",
+                      type: "error",
+                    });
+                  }, 3000);
+
+                  // setTimeout(() => {
+                  //   setIsLoading(true);
+                  // }, 2000);
+                  // setIsLoading(false);
+                  // notificationRef.current.openNotification({
+                  //   message: "Invalid Payment Details",
+                  //   description: "Try again later",
+                  //   type: "error",
+                  // });
+                }
               }}
               formItemClassName="w-full p-2 booking-form-item lg:h-[5.5rem]"
               className="flex lg:flex-row flex-wrap items-center justify-between"

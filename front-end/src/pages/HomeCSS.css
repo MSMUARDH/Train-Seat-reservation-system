@@ -1,0 +1,31 @@
+.book-card {
+    position: absolute;
+    z-index: 100;
+    margin: -200px 0px 0px 280px;
+
+}
+
+.card-booking {
+    background-color: rgb(2, 27, 42);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+/*About*/
+.container {
+    padding: 80px;
+    margin-top: 150px;
+}
+
+.heading-about {
+    font-size: 42px;
+    font-weight: 500;
+}
+
+.about-para {
+    font-size: 18px;
+    font-weight: 100;
+    text-align: justify;
+    color: rgba(128, 128, 128, 0.811);
+}
+
+/*About*/

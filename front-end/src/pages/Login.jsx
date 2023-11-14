@@ -9,6 +9,10 @@ import { useNavigate } from "react-router-dom";
 import authContext from "../context/AuthContext";
 import ForgetPassword from "./login/ForgetPassword";
 import CommonNotification from "../components/common/CommonNotification";
+import axios from "axios";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const loggedUserEmail = localStorage.getItem("train_user_email");
 const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
@@ -60,9 +64,50 @@ const Login = () => {
 
   // !start from here
   const handleLogin = async (formVal) => {
-    // console.log(formVal);
-    // if (isLoginForm) {
-    // }
+    console.log(formVal);
+    console.log(isLoginForm);
+
+    try {
+      if (isLoginForm) {
+        //! send login Information
+        console.log(formVal.email, formVal.password);
+
+        const LoginData = { Email: formVal.email, Password: formVal.password };
+
+        const response = await axios.post(
+          `http://localhost:5000/api/user/login`,
+          LoginData
+        );
+
+        if (response.status == 200) {
+          toast.success(response.data.message);
+          console.log(response);
+        }
+      } else {
+        //! sen register information
+        console.log("this is from register", formVal);
+        const RegisterData = {
+          Name: formVal.name,
+          Email: formVal.email,
+          Password: formVal.password,
+          Nic_no: formVal.nic,
+          Mobile_no: formVal.phone_number,
+        };
+
+        const response = await axios.post(
+          `http://localhost:5000/api/user/register`,
+          RegisterData
+        );
+
+        if (response.status == 200) {
+          toast.success(response.data.message);
+          console.log(response.data);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      // toast.error(error.response.data.message);
+    }
   };
 
   useEffect(() => {
@@ -78,6 +123,7 @@ const Login = () => {
 
   return (
     <div className="h-screen">
+      <ToastContainer />
       <CommonNotification ref={notificationRef}>
         <div className="flex flex-row items-start justify-center h-full">
           <div

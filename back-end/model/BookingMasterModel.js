@@ -11,10 +11,8 @@ const BookingMasterSchema = new mongoose.Schema({
   TravalDate: Date,
   TrainId: { type: mongoose.Schema.Types.ObjectId, ref: "Train" },
   RouteId: { type: mongoose.Schema.Types.ObjectId, ref: "RouteDetail" },
-  SeatNo: [String],
-
-  BoardingId: { type: mongoose.Schema.Types.ObjectId, ref: "Pickupstandinfo" },
-
+  BookedSeatNo: [String],
+  ClassType: String,
   Origin: String,
   Destination: String,
   TotalAmount: {

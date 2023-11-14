@@ -1,22 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal } from "antd";
+import axios from "axios";
 
-const ThirdClassSeatSelection = ({ open, onClose }) => {
+const ThirdClassSeatSelection = ({ open, onClose, Fair }) => {
+  const [bookedSeats, setBookedSeat] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const maxSelection = 5; // Maximum seats a user can select
 
-  {
-    onClose && selectedSeats.length < 1
-      ? localStorage.removeItem("SEAT_SELECTION_3")
-      : localStorage.setItem(
-          "SEAT_SELECTION_3",
-          JSON.stringify({
-            class: "3rd Class",
-            selectedSeats: `${selectedSeats}`,
-            totalFair: `${selectedSeats.length * Fair}`,
-          })
-        );
-  }
+  const data = JSON.parse(localStorage.getItem("TRAIN_SELECTION"));
+
+  const ScheduleId = data.ScheduleId;
+  const trainId = data.trainId;
+  const routeId = data.routeId;
+  const classtype = "3rd Class";
+
+  // console.log(ScheduleId, trainId, routeId,classtype);
+
+  const bodyData = { ScheduleId, trainId, routeId, classtype };
+
+  const getBookedSeat = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/user/get-booked-seat-deatils",
+        bodyData
+      );
+      console.log("3rd class seat data response", response.data.BookedSeats);
+      setBookedSeat(response.data.BookedSeats);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getBookedSeat();
+  }, []);
+
+  // ! New CODE FOR TESTING ///////////////
+  // Logic for adding second class seat selection to localStorage
+  useEffect(() => {
+    // Check if seats are selected and the modal is closed
+    if (selectedSeats.length > 0 && !open) {
+      localStorage.setItem(
+        "SEAT_SELECTION",
+        JSON.stringify({
+          class: "3rd Class",
+          selectedSeats: selectedSeats,
+          totalFair: selectedSeats.length * Fair,
+        })
+      );
+    }
+  }, [open, selectedSeats, Fair]);
+
+  // ! /////////////////////////////
+
+  // !old code
+  // {
+  //   onClose && selectedSeats.length < 1
+  //     ? localStorage.removeItem("SEAT_SELECTION_3")
+  //     : localStorage.setItem(
+  //         "SEAT_SELECTION_3",
+  //         JSON.stringify({
+  //           class: "3rd Class",
+  //           selectedSeats: `${selectedSeats}`,
+  //           totalFair: `${selectedSeats.length * Fair}`,
+  //         })
+  //       );
+  // }
+
+  // ! //////////////////////////////
 
   const toggleSeat = (seatNumber) => {
     if (selectedSeats.includes(seatNumber)) {
@@ -29,9 +80,6 @@ const ThirdClassSeatSelection = ({ open, onClose }) => {
   };
 
   const isSeatSelected = (seatNumber) => selectedSeats.includes(seatNumber);
-
-  // !testing already booked seats
-  const bookedSeats = [3];
 
   const renderSeats = () => {
     const seats = [];
@@ -124,11 +172,3 @@ const ThirdClassSeatSelection = ({ open, onClose }) => {
   );
 };
 export default ThirdClassSeatSelection;
-
-// import React from "react";
-
-// const ThirdClassSeatSelection = () => {
-//   return <div>ThirdClassSeatSelection</div>;
-// };
-
-// export default ThirdClassSeatSelection;
