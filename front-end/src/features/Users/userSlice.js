@@ -9,7 +9,11 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+
+    getUser: (state, action) => {
+      return state.user;
+    },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, getUser } = userSlice.actions;

@@ -22,7 +22,6 @@ import Login from "./pages/Login";
 import AdminHome from "./pages/admin/AdminHome";
 import ClassDetailPage from "./pages/admin/ClassDetailPage";
 import RouteDetailPage from "./pages/admin/RouteDetailPage";
-import TrainScheduleTable from "./pages/admin/TrainSchedulePage";
 import TrainSchedulePage from "./pages/admin/TrainSchedulePage";
 import PickupInfoPage from "./pages/admin/PickupInfoPage";
 import AvailabilityPage from "./pages/User/AvailabilityPage";
@@ -41,6 +40,10 @@ import ContactPage from "./pages/User/ContactPage";
 import TermssndConditionsPage from "./pages/User/TermssndConditionsPage";
 import UserProfile from "./pages/User/UserProfile";
 import TrainScheduleCheckPage from "./pages/User/TrainScheduleCheckPage";
+import About from "./pages/User/About";
+
+// ? Protected routes
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // import HomePage from "./pages/User/HomePage";
 
@@ -55,8 +58,15 @@ function App() {
             errorElement={<Error />}
           /> */}
         </Route>
-        <Route path="/admin" element={<AdminHome />} errorElement={<Error />} />
-        {/* /////////////////////////////////////////////////////////// */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminHome />
+            </ProtectedRoute>
+          }
+          errorElement={<Error />}
+        />
         <Route path="/user/home" element={<Home />} errorElement={<Error />} />
         {/* RailwayHistory */}
         <Route
@@ -80,13 +90,17 @@ function App() {
           errorElement={<Error />}
         />
         <Route
-          path="/user/profile"
-          element={<UserProfile />}
+          path="/user/about"
+          element={<About />}
           errorElement={<Error />}
         />
         <Route
           path="/user/profile"
-          element={<UserProfile />}
+          element={
+            <ProtectedRoute>
+              <UserProfile />
+            </ProtectedRoute>
+          }
           errorElement={<Error />}
         />
         <Route

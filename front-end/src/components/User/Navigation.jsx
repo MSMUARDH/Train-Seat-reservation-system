@@ -5,7 +5,8 @@ import logo from "../../assets/img/logo.png";
 import "../User/HomeCarousel.css";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-const App = () => {
+const App = ({ selectedPage }) => {
+  console.log("selectedPage from Contact", selectedPage);
   return (
     <Layout className="layout">
       <Header
@@ -16,17 +17,30 @@ const App = () => {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["home"]}
+          selectedKeys={[`${selectedPage}`]}
+          // defaultSelectedKeys={["home"]}
           style={{ flex: 1, justifyContent: "flex-end" }}
         >
           <Menu.Item key="home">
             <Link to="/user/home">Home</Link>
           </Menu.Item>
+          <Menu.Item key="history">
+            <Link to="/user/railway-history">History</Link>
+          </Menu.Item>
+          <Menu.Item key="services">
+            <Link to="/user/railway-services">Services</Link>
+          </Menu.Item>
           <Menu.Item key="about">
-            <Link to="/about">About</Link>
+            <Link to="/user/about">About</Link>
           </Menu.Item>
           <Menu.Item key="contact">
             <Link to="/user/contacts">Contact</Link>
+          </Menu.Item>
+          <Menu.Item key="terms">
+            <Link to="/user/railway-terms">Terms</Link>
+          </Menu.Item>
+          <Menu.Item key="profile">
+            <Link to="/user/profile">Profile</Link>
           </Menu.Item>
           <Menu.Item key="login">
             <Link to="/login">Login</Link>

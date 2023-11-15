@@ -64,13 +64,13 @@ const Login = () => {
 
   // !start from here
   const handleLogin = async (formVal) => {
-    console.log(formVal);
-    console.log(isLoginForm);
+    // console.log(formVal);
+    // console.log(isLoginForm);
 
     try {
       if (isLoginForm) {
         //! send login Information
-        console.log(formVal.email, formVal.password);
+        // console.log(formVal.email, formVal.password);
 
         const LoginData = { Email: formVal.email, Password: formVal.password };
 
@@ -80,8 +80,11 @@ const Login = () => {
         );
 
         if (response.status == 200) {
+          const userTkn = response.data.token;
+          localStorage.setItem("token", userTkn);
           toast.success(response.data.message);
-          console.log(response);
+          // navigate("/");
+          // console.log(response);
         }
       } else {
         //! sen register information

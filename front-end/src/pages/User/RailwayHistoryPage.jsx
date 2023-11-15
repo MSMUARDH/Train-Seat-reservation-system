@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import Navigation from "../../components/User/Navigation";
 
 const RailwayHistoryPage = () => {
   return (
-    <div>RailwayHistoryPage</div>
-  )
-}
+    <>
+      <Navigation selectedPage="history" />
+      <h1>RailwayHistoryPage</h1>
+    </>
+  );
+};
 
-export default RailwayHistoryPage
+export default RailwayHistoryPage;

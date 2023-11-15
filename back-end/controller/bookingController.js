@@ -5,6 +5,11 @@ const ClassDetailModel = require("../model/SeatDetailModel");
 const CardDetailModel = require("../model/CardDetailModel");
 const BookingModel = require("../model/BookingMasterModel");
 
+// Import the functions you need from the SDKs you need
+
+// const { initializeApp } = require('firebase/app');
+// const { getAnalytics } = require("firebase/analytics");
+
 const checkTrainAvailability = async (req, res) => {
   const { From, To, date } = req.body;
 

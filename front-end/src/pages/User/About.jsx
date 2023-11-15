@@ -1,9 +1,11 @@
 import React from "react";
 import "../HomeCSS.css";
+import Navigation from "../../components/User/Navigation";
 
 export default function About() {
   return (
     <div>
+      <Navigation selectedPage="about" />
       <div className="container">
         <p className="heading-about">About us</p>
         <p className="about-para">

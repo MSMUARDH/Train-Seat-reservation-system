@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import Navigation from "../../components/User/Navigation";
 
 const RailwayServicesPage = () => {
   return (
-    <div>RailwayServicesPage</div>
-  )
-}
+    <div>
+      <Navigation selectedPage="services" />
+      <h1>RailwayServicesPage</h1>
+    </div>
+  );
+};
 
-export default RailwayServicesPage
+export default RailwayServicesPage;

@@ -2,9 +2,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../model/UserModel");
 const crypto = require("crypto");
+const mongoose = require("mongoose");
 
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
+const BookingMasterModel = require("../model/BookingMasterModel");
 dotenv.config();
 
 //!load envirement variable (newly added)
@@ -204,75 +206,62 @@ const login = async (req, res) => {
     return res.status(404).json({ message: "user has been deleted already" });
   }
 
-  //crate a json web token
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+  const _id = user._id;
+  const token = createToken(_id);
 
-  //token store to the cookies
-  res.cookie("access_token", token, {
-    httpOnly: false,
-    secure: true,
-    sameSite: "none",
-    maxAge: 180 * 60 * 1000,
-  });
-
-  res.status(200).json({
-    message: "Login success",
-    id: user._id,
-    email: user.Email,
+  res.status(200).send({
+    message: "Login successful",
+    token: token,
   });
 };
 
-//! old Login Controller
-// const loginUser = async (req, res) => {
-//   try {
-//     const { Email, Password } = req.body;
+// ?get user by id for the protected routes
+const getUser = async (req, res) => {
+  const { User_Id } = req.body;
 
-//     console.log("this is log in", Email, Password);
+  if (!mongoose.Types.ObjectId.isValid(User_Id)) {
+    return res.status(404).json({ error: "No such User" });
+  }
 
-//     // const userExist = await User.findOne({ Email: Email });
+  const user = await User.findById(User_Id);
 
-//     // if (!userExist)
-//     //   return res
-//     //     .status(400)
-//     //     .json({ message: "user needs to register first ", success: false });
+  if (!user) {
+    return res.status(404).json("no such User");
+  }
 
-//     // const isValid = await bcrypt.compare(Password, userExist.Password);
+  return res.status(200).json({ success: true, data: user });
+};
 
-//     // // !check below code with the help of ui
-//     // if (userExist && !isValid)
-//     //   return res
-//     //     .status(400)
-//     //     .json({ message: "Password is incorrect", success: false });
+const getSingleUserBookedTickets = async (req, res) => {
+  const { userid } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(userid)) {
+    return res.status(404).json({ error: "No such User" });
+  }
 
-//     // const isVerified = userExist.isVerified;
+  // const user = await User.findOne({ _id: userid });
 
-//     // if (isValid && isVerified) {
-//     //   // const user = { _id: userExist._id };
-//     //   // const token = createToken(user._id);
-//     //   const _id = userExist._id;
-//     //   const token = createToken(_id);
+  // //check user exists or not
+  // if (!user) {
+  //   return res.status(404).json({ message: "User doesn't exist" });
+  // }
 
-//     //   res
-//     //     .status(200)
-//     //     .send({
-//     //       message: "Login successful",
-//     //       success: true,
-//     //       token: token,
-//     //       role: userExist.role,
-//     //     });
-//     // } else if (!isVerified) {
-//     //   res
-//     //     .status(400)
-//     //     .send({ message: "Email Has Not Verified", success: false });
-//     // } else {
-//     //   res
-//     //     .status(400)
-//     //     .json({ message: "Email or password is incorrect", success: false });
-//     // }
-//   } catch (err) {
-//     res.status(500).json({ message: err.message, success: false });
-//   }
-// };
+  const bookingDetails = await BookingMasterModel.find({ UserId: userid });
+
+  // console.log(bookingDetails);
+
+  return res.status(200).json({
+    message: "Bookin Details Provided successfully",
+    bookingDetails: bookingDetails,
+  });
+};
+
+module.exports = {
+  registerUser,
+  accountVerify,
+  login,
+  getUser,
+  getSingleUserBookedTickets,
+};
 
 // ! verifyEmail (old code)
 // const verifyEmail = async (req, res) => {
@@ -297,5 +286,3 @@ const login = async (req, res) => {
 //     res.status(500).json(error.message);
 //   }
 // };
-
-module.exports = { registerUser, accountVerify, login };

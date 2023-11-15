@@ -176,8 +176,8 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <Navigation />
+    <>
+      <Navigation selectedPage="home" />
       <HomeCarousel />
       {contextHolder}
 
@@ -342,8 +342,8 @@ const Home = () => {
         </Card>
       </div>
 
-      <About />
-    </div>
+      {/* <About /> */}
+    </>
   );
 };
 
