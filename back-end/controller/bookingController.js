@@ -371,6 +371,7 @@ const getTrainClassDetails = async (req, res) => {
 
 const bookingTrain = async (req, res) => {
   const { trainDetails, seatSelection } = req.body;
+  const { userid } = req.params;
 
   try {
     console.log("seat Selection details", seatSelection);
@@ -426,7 +427,7 @@ const bookingTrain = async (req, res) => {
 
     if (isCardDetailExist && classDetails) {
       await BookingModel.create({
-        UserId: "654b43522f3020a526b6f42c",
+        UserId: userid,
         ScheduleId: trainDetails.ScheduleId,
         TravalDate: formattedTravalDate,
         TrainId: trainDetails.trainId,
@@ -538,9 +539,35 @@ const getBookedSeatDetails = async (req, res) => {
   });
 };
 
+const addBookedTicket = async (req, res) => {
+  const { userid, pnrno } = req.params;
+  const { imageUrl } = req.body;
+
+  console.log("imageUrl", imageUrl);
+
+  console.log("userid,pnr", userid, pnrno);
+
+  await BookingModel.findOne({ UserId: userid, PNRNo: pnrno }).then(
+    async (bookingDetail) => {
+      const updatedBooking = await BookingModel.findByIdAndUpdate(
+        bookingDetail._id,
+        { BookedTicket: imageUrl }
+      );
+
+      console.log("updatedBooking", updatedBooking);
+
+      return res.status(200).json({
+        message: "Ticket updated successfully",
+        updatedBooking: updatedBooking,
+      });
+    }
+  );
+};
+
 module.exports = {
   checkTrainAvailability,
   getTrainClassDetails,
   bookingTrain,
   getBookedSeatDetails,
+  addBookedTicket,
 };

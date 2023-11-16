@@ -62,6 +62,19 @@ const columns = [
     ),
   },
 
+  {
+    title: "Ticket",
+    dataIndex: "BookedTicket",
+    key: "BookedTicket",
+    render: (text, record) => (
+      <a download href={`${record.BookedTicket}`}>
+        {" "}
+        DOWNLOAD TICKETS{" "}
+      </a>
+    ),
+    // console.log("check for booked tickets", record.BookedTicket),
+  },
+
   // {
   //   title: "Tags",
   //   key: "tags",
@@ -100,13 +113,20 @@ const UserProfile = () => {
 
   const [bookedDetails, setBookedDetails] = useState([]);
   const getUserBookingDetails = async () => {
-    //* use below userid to test
-    // 654b43522f3020a526b6f42c  or user
-    const response = await axios.get(
-      `http://localhost:5000/api/user/get-booked-tickets-by-userid/${user}`
-    );
-    // console.log(response.data.bookingDetails);
-    setBookedDetails(response.data.bookingDetails);
+    try {
+      //* use below userid to test
+      // 654b43522f3020a526b6f42c  or user
+      const response = await axios.get(
+        `http://localhost:5000/api/user/get-booked-tickets-by-userid/${user}`
+      );
+      console.log("TTTT BOOKING DD", response.data.bookingDetails);
+      setBookedDetails(response.data.bookingDetails);
+    } catch (error) {
+      console.log(
+        "error from fatching getUserBookingDetails from user profile",
+        error
+      );
+    }
   };
 
   useEffect(() => {

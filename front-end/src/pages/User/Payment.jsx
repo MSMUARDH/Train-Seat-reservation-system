@@ -10,8 +10,10 @@ import CommonNotification from "../../components/common/CommonNotification";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import QRCode from "qrcode";
+import { useDispatch, useSelector } from "react-redux";
 
 const Payment = () => {
+  const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
   // const [seatSelection, setSeatSelection] = useState(null);
   // const [trainDetails, setTrainDetails] = useState(null);
@@ -33,9 +35,17 @@ const Payment = () => {
 
   // ! generate QR code  -  testing
 
-  const genarateQrCode = async () => {
+  const genarateQrCode = async (data) => {
     try {
-      const response = await QRCode.toDataURL("testing");
+      console.log("data from qr code genarator", data);
+
+      const response = await QRCode.toDataURL(JSON.stringify(data));
+
+      const qrUpdatedResponse = await axios.patch(
+        `http://localhost:5000/api/user/upadte-user-ticket/${data.UserId}/${data.PNRNo}`,
+        { imageUrl: response }
+      );
+
       setImageUrl(response);
       console.log(response);
     } catch (error) {
@@ -59,13 +69,17 @@ const Payment = () => {
           <div>
             <Button
               icon={<BsFillArrowLeftCircleFill className="text-sky-600 mt-1" />}
-              onClick={() => genarateQrCode()}
+              // onClick={() => genarateQrCode()}
             >
               Go to search
             </Button>
 
             {imageUrl ? (
-              <a href={imageUrl} download>
+              <a
+                href={imageUrl}
+                download
+                style={{ display: "flex", justifyContent: "center" }}
+              >
                 <img src={imageUrl} alt="img" />
               </a>
             ) : null}
@@ -74,7 +88,7 @@ const Payment = () => {
               <Countdown
                 format="ss"
                 value={Date.now() + 5 * 1000}
-                // onFinish={() => navigate("/user/home")}
+                onFinish={() => navigate("/user/home")}
               />
             </div>
           </div>
@@ -122,7 +136,7 @@ const Payment = () => {
                   console.log("data to post", data);
 
                   const response = await axios.post(
-                    "http://localhost:5000/api/user/ticket-booking",
+                    `http://localhost:5000/api/user/ticket-booking/${user}`,
                     data
                   );
 
@@ -138,6 +152,34 @@ const Payment = () => {
                         description: "Your reservation was successful",
                         type: "success",
                       });
+                      // !testing
+                      console.log(
+                        "this is from successful payment",
+                        response.data.data
+                      );
+
+                      const {
+                        PNRNo,
+                        TravalDate,
+                        BookedSeatNo,
+                        Origin,
+                        ClassType,
+                        UserId,
+                        ScheduleId,
+                      } = response.data.data;
+
+                      const data = {
+                        PNRNo,
+                        TravalDate,
+                        BookedSeatNo,
+                        Origin,
+                        ClassType,
+                        UserId,
+                        ScheduleId,
+                      };
+
+                      // genarateQrCode(JSON.stringify(response.data.data));
+                      genarateQrCode(data);
 
                       localStorage.removeItem("SEAT_SELECTION");
                       localStorage.removeItem("TRAIN_SELECTION");

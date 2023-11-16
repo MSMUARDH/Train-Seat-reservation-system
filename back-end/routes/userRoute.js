@@ -15,6 +15,7 @@ const {
   getTrainClassDetails,
   bookingTrain,
   getBookedSeatDetails,
+  addBookedTicket,
 } = require("../controller/bookingController");
 const { uploadFile } = require("../controller/imageUploadController.js");
 
@@ -31,7 +32,7 @@ router.post("/check-train-availability", checkTrainAvailability);
 router.post("/get-train-class-details", getTrainClassDetails);
 
 // !Booking  - ongoing testing
-router.post("/ticket-booking", bookingTrain);
+router.post("/ticket-booking/:userid", bookingTrain);
 router.post("/get-booked-seat-deatils", getBookedSeatDetails);
 
 // !testing image uploads
@@ -42,5 +43,7 @@ router.post("/image-upload", upload.single("image"), uploadFile);
 router.get("/get-user-by-id", authMiddleware, getUser);
 
 router.get("/get-booked-tickets-by-userid/:userid", getSingleUserBookedTickets);
+
+router.patch("/upadte-user-ticket/:userid/:pnrno", addBookedTicket);
 
 module.exports = router;

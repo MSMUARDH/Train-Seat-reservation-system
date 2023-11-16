@@ -26,7 +26,7 @@ function ProtectedRoute(props) {
       // dispatch(hideLoading());
       if (response.data.success) {
         dispatch(setUser(response.data.data._id));
-        // console.log("this is from user set", response.data.data._id);
+        console.log("this is from user set", response.data.data._id);
         // navigate("/");
       } else {
         navigate("/login");

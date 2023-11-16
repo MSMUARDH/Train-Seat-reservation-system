@@ -234,6 +234,9 @@ const getUser = async (req, res) => {
 
 const getSingleUserBookedTickets = async (req, res) => {
   const { userid } = req.params;
+
+  console.log("TTTT BOOKING DETAILS", userid);
+
   if (!mongoose.Types.ObjectId.isValid(userid)) {
     return res.status(404).json({ error: "No such User" });
   }
@@ -247,12 +250,14 @@ const getSingleUserBookedTickets = async (req, res) => {
 
   const bookingDetails = await BookingMasterModel.find({ UserId: userid });
 
-  // console.log(bookingDetails);
+  console.log("TTTT BOOKING DETAILS", bookingDetails);
 
   return res.status(200).json({
-    message: "Bookin Details Provided successfully",
+    message: "booking detail provided success",
     bookingDetails: bookingDetails,
   });
+
+  // console.log(bookingDetails);
 };
 
 module.exports = {
