@@ -25,9 +25,15 @@ const TrainDetailPage = () => {
 
   return (
     <div>
-      {/* <h1 style={{ textAlign: "center", marginTop: 10 }}>
-        Train detail Managment e2
-      </h1> */}
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          // marginTop: "px",
+        }}
+      >
+        Train details
+      </h1>
       <TrainForm />
       {/* //! Class Details table inside the ClassDetailForm */}
     </div>

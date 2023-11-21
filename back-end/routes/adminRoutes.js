@@ -55,6 +55,10 @@ const {
   // getSeatDetailWithTrainInfo
 } = require("../controller/Admin/adminController");
 
+const {
+  getIncomeDetailsByTrain, getIncomeDetail,
+} = require("../controller/Admin/reportController");
+
 router.post("/add-train", addTrainDetails);
 router.get("/get-all-train-detail", getTrainDetails);
 router.put("/update-train-detail/:trainid", updateTranDetail); //! need to implement
@@ -100,6 +104,9 @@ router.delete("/delete-pickupinfo/:pickupinfoid", deletePickupInfo);
 
 router.post("/create-booking", createBooking);
 router.post("/create-pnrdetail", createPNRDetail);
+
+router.get("/get-income-report-by-train", getIncomeDetailsByTrain);
+router.get("/get-income-report",getIncomeDetail);
 
 // ?Below route example for aggregation testing
 // router.get("/check-agrt",getSeatDetailWithTrainInfo)

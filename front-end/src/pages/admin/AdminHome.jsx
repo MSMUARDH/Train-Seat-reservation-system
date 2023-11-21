@@ -21,6 +21,12 @@ import TrainDetailPage from "./TrainDetailPage";
 import AllClassDetailPage from "./AllClassDetailPage";
 import AllRouteDetailPage from "./AllRouteDetailPage";
 import AllScheduleDetailPage from "./AllScheduleDetailPage";
+import IncomeReport from "./IncomeReport";
+import MonthlyIncomeReport from "./MonthlyIncomeReport";
+import Logout from "./Logout";
+import { useNavigate } from "react-router-dom";
+
+
 
 function getItem(label, key, icon, children) {
   return {
@@ -39,23 +45,17 @@ const items = [
     getItem("All Route Details", "3"),
     getItem("All  Schedule Details", "4"),
   ]),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "5"),
-    getItem("Team 2", "6"),
+  getItem("Reports", "sub2", <FileOutlined />, [
+    getItem("Income by train", "5"),
+    getItem("Monthly Income Report", "6"),
   ]),
-  getItem("Files", "9", <FileOutlined />),
+  getItem("Logout", "7"),
 ];
 const AdminHome = () => {
+  const navigate = useNavigate();
   const { trains } = useSelector((state) => state.Trains);
   // const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
-  // const [childData, setChildData] = useState("");
-
-  // //! Function to receive data from the child component
-  // const receiveDataFromChild = (data) => {
-  //   setChildData(data);
-  // };
 
   const [key, setKey] = useState();
   const [collapsed, setCollapsed] = useState(false);
@@ -99,6 +99,7 @@ const AdminHome = () => {
           mode="inline"
           items={items}
           onClick={(e) => setKey(e.keyPath[0])}
+          // onClick={(e) => console.log(e.keyPath[0])}
         />
       </Sider>
       <Layout>
@@ -128,6 +129,9 @@ const AdminHome = () => {
             {key == 2 && <AllClassDetailPage />}
             {key == 3 && <AllRouteDetailPage />}
             {key == 4 && <AllScheduleDetailPage />}
+            {key == 5 && <IncomeReport />}
+            {key == 6 && <MonthlyIncomeReport />}
+            {key == 7 && <Logout />}
           </div>
         </Content>
         <Footer
@@ -135,7 +139,7 @@ const AdminHome = () => {
             textAlign: "center",
           }}
         >
-          Ant Design ©2023 Created by Ant UED
+          Railway Department ©2023
         </Footer>
       </Layout>
     </Layout>

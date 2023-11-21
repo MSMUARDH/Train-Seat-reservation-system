@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const BookingMasterModel = require("../model/BookingMasterModel");
+const PickupInfoModel = require("../model/PickupInfoModel");
+const ScheduleMasterModel = require("../model/ScheduleMasterModel");
 dotenv.config();
 
 //!load envirement variable (newly added)
@@ -206,12 +208,14 @@ const login = async (req, res) => {
     return res.status(404).json({ message: "user has been deleted already" });
   }
 
+  const role = user.role;
   const _id = user._id;
   const token = createToken(_id);
 
-  res.status(200).send({
+  return res.status(200).send({
     message: "Login successful",
     token: token,
+    role: role,
   });
 };
 
@@ -260,12 +264,95 @@ const getSingleUserBookedTickets = async (req, res) => {
   // console.log(bookingDetails);
 };
 
+// !on going function foe the train schedule search
+
+const searchfortheTrainSchedule = async (req, res) => {
+  const { From, date } = req.body;
+
+  // console.log("date test", date);
+
+  try {
+    // !test
+
+    let scheduleDetails = [];
+
+    const uniqueRoutId = await PickupInfoModel.find({
+      Station: From,
+    }).distinct("RouteId");
+
+    console.log(uniqueRoutId);
+
+    // console.log("start");
+
+    await Promise.all(
+      uniqueRoutId.map(async (routeId) => {
+        // console.log(routeId.toHexString());
+
+        const fromStation = await PickupInfoModel.findOne({
+          RouteId: routeId,
+          Station: From,
+        });
+
+        const ScheduleDetail = await ScheduleMasterModel.findOne({
+          RouteId: fromStation.RouteId,
+        }).populate("TrainId RouteId");
+
+        // console.log("Your station", From);
+        // console.log(ScheduleDetail.TrainId.TrainName);
+        // console.log(ScheduleDetail.TrainId.TrainType);
+        // console.log(ScheduleDetail.DepatureTime);
+        // console.log(ScheduleDetail.Date);
+        // console.log(ScheduleDetail.RouteId.To);
+
+        const yourStation = From;
+        const trainName = ScheduleDetail.TrainId.TrainName;
+        const trainType = ScheduleDetail.TrainId.TrainType;
+        const time = ScheduleDetail.DepatureTime;
+        const date = ScheduleDetail.Date;
+        const lastStation = ScheduleDetail.RouteId.To;
+
+        const data = {
+          yourStation,
+          trainName,
+          trainType,
+          time,
+          date,
+          lastStation,
+        };
+
+        console.log(data);
+
+        scheduleDetails.push(data);
+
+        // console.log(data);
+      })
+    );
+
+    // // console.log(data);
+
+    if (scheduleDetails != "") {
+      // console.log("end", AvailabilityDetails);
+      return res.status(200).send({
+        message: "Schedule details provided success",
+        scheduleDetails: scheduleDetails,
+      });
+    } else {
+      return res.status(404).send({
+        message: "no any Schedule found",
+      });
+    }
+  } catch (error) {
+    console.log("error", error.message);
+  }
+};
+
 module.exports = {
   registerUser,
   accountVerify,
   login,
   getUser,
   getSingleUserBookedTickets,
+  searchfortheTrainSchedule,
 };
 
 // ! verifyEmail (old code)

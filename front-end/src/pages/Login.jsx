@@ -83,8 +83,14 @@ const Login = () => {
           const userTkn = response.data.token;
           localStorage.setItem("token", userTkn);
           toast.success(response.data.message);
-          // navigate("/");
-          // console.log(response);
+
+          if (response.data.role == "user") {
+            navigate("/user/home");
+          }
+
+          if (response.data.role == "admin") {
+            navigate("/admin");
+          }
         }
       } else {
         //! sen register information

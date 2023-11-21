@@ -11,6 +11,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import QRCode from "qrcode";
 import { useDispatch, useSelector } from "react-redux";
+import StepsBar from "../../components/User/StepsBar";
 
 const Payment = () => {
   const { user } = useSelector((state) => state.user);
@@ -88,7 +89,7 @@ const Payment = () => {
               <Countdown
                 format="ss"
                 value={Date.now() + 5 * 1000}
-                onFinish={() => navigate("/user/home")}
+                onFinish={() => navigate("/user/profile")}
               />
             </div>
           </div>
@@ -101,141 +102,156 @@ const Payment = () => {
       tip="Making payment , don't refresh the page!"
       className={`payment-loader ${isLoading && "bg-[#F8FAFC]/70"}`}
     >
+      <StepsBar stepNum={3} />
       <CommonNotification ref={notificationRef}>
         <div className="flex items-center justify-between h-[52vh] flex-wrap">
           <div className="w-full lg:w-1/3">
             {/* //! */}
-            <div className="w-full mt-5 ml-2 p-6 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-0 dark:bg-gray-800 dark:border-gray-700">
+
+            {/* <div className="w-full mt-5 ml-2 p-6 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-0 dark:bg-gray-800 dark:border-gray-700">
+              <p className=" text-base text-gray-500 sm:text-lg dark:text-gray-400">
+                <p>Total LKR: {seatSelection?.totalFair}</p>
+              </p>
+            </div> */}
+            {/* //! */}
+
+            <div style={{ marginLeft: "30px" }}>
+              <CommonForm
+                fields={data.fields}
+                onValChangeCallback={(changedValues) => {
+                  setEnteredCardNumber({
+                    ...enteredCardNumber,
+                    ...changedValues,
+                  });
+                }}
+                onSubmit={async () => {
+                  console.log("entered card number", enteredCardNumber);
+
+                  try {
+                    console.log(
+                      "train from payment trainDetails",
+                      trainDetails
+                    );
+                    console.log(
+                      "train from payment seatDetails",
+                      seatSelection
+                    );
+
+                    const data = {
+                      enteredCardNumber,
+                      trainDetails,
+                      seatSelection,
+                    };
+
+                    console.log("user id from payment", user.id);
+
+                    const response = await axios.post(
+                      `http://localhost:5000/api/user/ticket-booking/${user.id}`,
+                      data
+                    );
+
+                    // console.log();
+
+                    setIsLoading(true);
+
+                    if (response.status == 200) {
+                      setTimeout(() => {
+                        setIsLoading(false);
+                        notificationRef.current.openNotification({
+                          message: "Payment Successful",
+                          description: "Your reservation was successful",
+                          type: "success",
+                        });
+                        // !testing
+                        console.log(
+                          "this is from successful payment",
+                          response.data.data
+                        );
+
+                        const {
+                          PNRNo,
+                          TravalDate,
+                          BookedSeatNo,
+                          Origin,
+                          ClassType,
+                          UserId,
+                          ScheduleId,
+                        } = response.data.data;
+
+                        const data = {
+                          PNRNo,
+                          TravalDate,
+                          BookedSeatNo,
+                          Origin,
+                          ClassType,
+                          UserId,
+                          ScheduleId,
+                        };
+
+                        // genarateQrCode(JSON.stringify(response.data.data));
+                        genarateQrCode(data);
+
+                        localStorage.removeItem("SEAT_SELECTION");
+                        localStorage.removeItem("TRAIN_SELECTION");
+
+                        // Code to run after fully finishing 2 seconds
+                      }, 2000);
+
+                      setTimeout(() => {
+                        setIsLoading(false);
+                        setIsFinalStep(true);
+                        // Code to run after fully finishing 2 seconds
+                      }, 3000);
+
+                      // setTimeout(() => {
+                      //   setIsFinalStep(true);
+                      // }, 2000);
+                      // notificationRef.current.openNotification({
+                      //   message: "Payment Successful",
+                      //   description: "Your reservation was successful",
+                      //   type: "success",
+                      // });
+                    }
+                  } catch (error) {
+                    console.log(error);
+
+                    setIsLoading(true);
+
+                    setTimeout(() => {
+                      setIsLoading(false);
+
+                      // Code to run after fully finishing 2 seconds
+                      notificationRef.current.openNotification({
+                        message: "Invalid Payment Details",
+                        description: "Please provide correct payment details!",
+                        type: "error",
+                      });
+                    }, 3000);
+
+                    // setTimeout(() => {
+                    //   setIsLoading(true);
+                    // }, 2000);
+                    // setIsLoading(false);
+                    // notificationRef.current.openNotification({
+                    //   message: "Invalid Payment Details",
+                    //   description: "Try again later",
+                    //   type: "error",
+                    // });
+                  }
+                }}
+                formItemClassName="w-full p-2 booking-form-item lg:h-[5.5rem]"
+                className="flex lg:flex-row flex-wrap items-center justify-between"
+                name="payment-form"
+                formBtnText={data.formBtnText}
+                btnWrapperClassName="w-full item-end lg:ml-auto lg:h-22 lg:h-[5.5rem] booking-form-item lg:pt-[1.93rem] px-2"
+                btnClassName="lg:mt-auto"
+              />
+            </div>
+            <div className=" mt-5 ml-5 p-6 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-0 dark:bg-gray-800 dark:border-gray-700">
               <p className=" text-base text-gray-500 sm:text-lg dark:text-gray-400">
                 <p>Total LKR: {seatSelection?.totalFair}</p>
               </p>
             </div>
-            {/* //! */}
-
-            <CommonForm
-              fields={data.fields}
-              onValChangeCallback={(changedValues) => {
-                setEnteredCardNumber({
-                  ...enteredCardNumber,
-                  ...changedValues,
-                });
-              }}
-              onSubmit={async () => {
-                console.log("entered card number", enteredCardNumber);
-
-                try {
-                  console.log("train from payment trainDetails", trainDetails);
-                  console.log("train from payment seatDetails", seatSelection);
-
-                  const data = {
-                    enteredCardNumber,
-                    trainDetails,
-                    seatSelection,
-                  };
-
-                  console.log("data to post", data);
-
-                  const response = await axios.post(
-                    `http://localhost:5000/api/user/ticket-booking/${user}`,
-                    data
-                  );
-
-                  console.log();
-
-                  setIsLoading(true);
-
-                  if (response.status == 200) {
-                    setTimeout(() => {
-                      setIsLoading(false);
-                      notificationRef.current.openNotification({
-                        message: "Payment Successful",
-                        description: "Your reservation was successful",
-                        type: "success",
-                      });
-                      // !testing
-                      console.log(
-                        "this is from successful payment",
-                        response.data.data
-                      );
-
-                      const {
-                        PNRNo,
-                        TravalDate,
-                        BookedSeatNo,
-                        Origin,
-                        ClassType,
-                        UserId,
-                        ScheduleId,
-                      } = response.data.data;
-
-                      const data = {
-                        PNRNo,
-                        TravalDate,
-                        BookedSeatNo,
-                        Origin,
-                        ClassType,
-                        UserId,
-                        ScheduleId,
-                      };
-
-                      // genarateQrCode(JSON.stringify(response.data.data));
-                      genarateQrCode(data);
-
-                      localStorage.removeItem("SEAT_SELECTION");
-                      localStorage.removeItem("TRAIN_SELECTION");
-
-                      // Code to run after fully finishing 2 seconds
-                    }, 2000);
-
-                    setTimeout(() => {
-                      setIsLoading(false);
-                      setIsFinalStep(true);
-                      // Code to run after fully finishing 2 seconds
-                    }, 3000);
-
-                    // setTimeout(() => {
-                    //   setIsFinalStep(true);
-                    // }, 2000);
-                    // notificationRef.current.openNotification({
-                    //   message: "Payment Successful",
-                    //   description: "Your reservation was successful",
-                    //   type: "success",
-                    // });
-                  }
-                } catch (error) {
-                  console.log(error);
-
-                  setIsLoading(true);
-
-                  setTimeout(() => {
-                    setIsLoading(false);
-
-                    // Code to run after fully finishing 2 seconds
-                    notificationRef.current.openNotification({
-                      message: "Invalid Payment Details",
-                      description: "Please provide correct payment details!",
-                      type: "error",
-                    });
-                  }, 3000);
-
-                  // setTimeout(() => {
-                  //   setIsLoading(true);
-                  // }, 2000);
-                  // setIsLoading(false);
-                  // notificationRef.current.openNotification({
-                  //   message: "Invalid Payment Details",
-                  //   description: "Try again later",
-                  //   type: "error",
-                  // });
-                }
-              }}
-              formItemClassName="w-full p-2 booking-form-item lg:h-[5.5rem]"
-              className="flex lg:flex-row flex-wrap items-center justify-between"
-              name="payment-form"
-              formBtnText={data.formBtnText}
-              btnWrapperClassName="w-full item-end lg:ml-auto lg:h-22 lg:h-[5.5rem] booking-form-item lg:pt-[1.93rem] px-2"
-              btnClassName="lg:mt-auto"
-            />
           </div>
 
           <div className="w-full lg:w-2/3 flex justify-center">

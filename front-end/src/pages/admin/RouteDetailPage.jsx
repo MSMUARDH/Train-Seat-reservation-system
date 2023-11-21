@@ -28,7 +28,16 @@ const RouteDetailPage = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>RouteDetailPage</h1>
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          marginTop: "10px",
+        }}
+      >
+        Route details
+      </h1>
+
       <RouteDetailForm trainid={trainid} />
     </div>
   );

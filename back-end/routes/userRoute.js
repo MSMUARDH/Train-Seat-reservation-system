@@ -8,6 +8,7 @@ const {
   login,
   getUser,
   getSingleUserBookedTickets,
+  searchfortheTrainSchedule,
 } = require("../controller/userController");
 
 const {
@@ -45,5 +46,8 @@ router.get("/get-user-by-id", authMiddleware, getUser);
 router.get("/get-booked-tickets-by-userid/:userid", getSingleUserBookedTickets);
 
 router.patch("/upadte-user-ticket/:userid/:pnrno", addBookedTicket);
+
+// ! search for the train
+router.post("/search-for-the-train", searchfortheTrainSchedule);
 
 module.exports = router;

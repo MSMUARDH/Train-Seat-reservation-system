@@ -1,10 +1,10 @@
 import React from "react";
 import { Steps } from "antd";
-const StepsBar = () => (
+const StepsBar = ({ stepNum }) => (
   <Steps
     style={{ padding: 50, marginRight: 50 }}
-    size="small"
-    current={3}
+    size="large"
+    current={stepNum}
     items={[
       {
         title: "Home",
@@ -16,10 +16,7 @@ const StepsBar = () => (
         title: "Seat Selection",
       },
       {
-        title: "Seat Selection",
-      },
-      {
-        title: "Seat Selection",
+        title: "Payment",
       },
     ]}
   />

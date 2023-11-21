@@ -4,8 +4,14 @@ import AllScheduleDetailForm from "../../components/AllScheduleDetailForm";
 const AllScheduleDetailPage = () => {
   return (
     <div>
-      <h1 style={{ textAlign: "center", marginTop: 10 }}>
-        All Schedule Detail
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          marginTop: "10px",
+        }}
+      >
+        Schedule Details
       </h1>
 
       <AllScheduleDetailForm />

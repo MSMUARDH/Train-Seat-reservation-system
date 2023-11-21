@@ -10,8 +10,15 @@ import AllRouteDetailForm from "../../components/AllRouteDetailForm";
 const AllRouteDetailPage = () => {
   return (
     <div>
-      <h1 style={{ textAlign: "center", marginTop: 10 }}>All Class Detail</h1>
-      {/* <ClassDetailForm trainid={trainid} data={data} /> */}
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          marginTop: "10px",
+        }}
+      >
+        Route Details
+      </h1>
 
       <AllRouteDetailForm />
     </div>

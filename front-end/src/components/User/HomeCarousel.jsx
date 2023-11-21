@@ -5,6 +5,7 @@ import img1 from "../../assets/img/1 (2).jpg";
 import img2 from "../../assets/img/2 (2).jpg";
 import img3 from "../../assets/img/3 (2).jpg";
 import img4 from "../../assets/img/4 (2).jpg";
+import { useNavigate } from "react-router";
 
 const contentStyle = {
   height: "100px",
@@ -14,7 +15,7 @@ const contentStyle = {
   background: "#364d79",
 };
 
-const HomeCarousel = () => (
+const HomeCarousel = ({ navigate }) => (
   <div>
     <div className="heading">
       <p className="heading-text">
@@ -24,8 +25,12 @@ const HomeCarousel = () => (
 
       <p className="sub-heading-text">Advance Online Train Seats Reservation</p>
       <br />
-      <button class="button-46" role="button">
-        Book Your Seat
+      <button
+        onClick={() => navigate("/user/train-schedule")}
+        className="button-46"
+        role="button"
+      >
+        Train Schedules
       </button>
     </div>
     <Carousel autoplay effect="fade" className="Carousel">

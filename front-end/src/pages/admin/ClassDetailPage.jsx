@@ -27,8 +27,14 @@ const ClassDetailPage = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center", marginTop: 10 }}>
-        Class detail Managment
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          marginTop: "10px",
+        }}
+      >
+        Class detail managment
       </h1>
       <ClassDetailForm trainid={trainid} routeid={routeid} data={data} />
       {/* //! Class Details table inside the ClassDetailForm */}

@@ -153,13 +153,3 @@ const AllClassDetailForm = () => {
   );
 };
 export default AllClassDetailForm;
-
-// import React from 'react'
-
-// const AllClassDetailForm = () => {
-//   return (
-//     <div>AllClassDetailForm</div>
-//   )
-// }
-
-// export default AllClassDetailForm

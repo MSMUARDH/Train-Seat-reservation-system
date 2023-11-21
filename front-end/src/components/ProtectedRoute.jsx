@@ -24,10 +24,19 @@ function ProtectedRoute(props) {
         }
       );
       // dispatch(hideLoading());
-      if (response.data.success) {
-        dispatch(setUser(response.data.data._id));
-        console.log("this is from user set", response.data.data._id);
-        // navigate("/");
+      if (response.status == 200) {
+        console.log("response", response.data.data.role);
+
+        const userData = {
+          id: response.data.data._id,
+          name: response.data.data.Name,
+          role: response.data.data.role,
+        };
+        console.log("this is from user set", userData);
+
+        dispatch(setUser(userData));
+
+        // dispatch(setUser(response.data.data.Name));
       } else {
         navigate("/login");
       }
@@ -44,6 +53,7 @@ function ProtectedRoute(props) {
     }
   }, [user]);
 
+  // * old code
   if (token) {
     return props.children;
   } else {

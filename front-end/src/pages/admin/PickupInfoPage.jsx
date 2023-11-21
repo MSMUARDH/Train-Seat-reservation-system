@@ -65,7 +65,15 @@ const PickupInfoPage = () => {
 
   return (
     <div>
-      <h1>PickupInfoPage</h1>
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          marginTop: "10px",
+        }}
+      >
+        Pickup Informations
+      </h1>
       <PickupInfoForm
         classDetails={classDetails}
         pickupInfo={pickupInfoDetails}

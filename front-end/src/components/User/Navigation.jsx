@@ -1,11 +1,23 @@
 import React from "react";
-import { Layout, Menu } from "antd";
+import { Button, Layout, Menu } from "antd";
 const { Header, Content } = Layout;
 import logo from "../../assets/img/logo.png";
 import "../User/HomeCarousel.css";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../features/Users/userSlice";
 
 const App = ({ selectedPage }) => {
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   console.log("selectedPage from Contact", selectedPage);
   return (
     <Layout className="layout">
@@ -39,15 +51,31 @@ const App = ({ selectedPage }) => {
           <Menu.Item key="terms">
             <Link to="/user/railway-terms">Terms</Link>
           </Menu.Item>
-          <Menu.Item key="profile">
-            <Link to="/user/profile">Profile</Link>
-          </Menu.Item>
-          <Menu.Item key="login">
-            <Link to="/login">Login</Link>
-          </Menu.Item>
-          <Menu.Item key="signup">
+
+          {user && (
+            <Menu.Item key="profile">
+              <Link to="/user/profile">Hi ! {user.name}</Link>
+            </Menu.Item>
+          )}
+
+          {user && (
+            <Menu.Item
+              onClick={() => {
+                localStorage.clear();
+                navigate("/login");
+                dispatch(setUser(null));
+              }}
+              key="login"
+            >
+              {/* <Button color="primary" size="large"> */}
+              <Link>Logout</Link>
+              {/* </Button> */}
+            </Menu.Item>
+          )}
+
+          {/* <Menu.Item key="signup">
             <Link to="/login">Signup</Link>
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu>
       </Header>
     </Layout>

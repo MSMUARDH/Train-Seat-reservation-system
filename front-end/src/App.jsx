@@ -67,31 +67,59 @@ function App() {
           }
           errorElement={<Error />}
         />
-        <Route path="/user/home" element={<Home />} errorElement={<Error />} />
+        <Route
+          path="/user/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+          errorElement={<Error />}
+        />
         {/* RailwayHistory */}
         <Route
           path="/user/railway-history"
-          element={<RailwayHistoryPage />}
+          element={
+            <ProtectedRoute>
+              <RailwayHistoryPage />
+            </ProtectedRoute>
+          }
           errorElement={<Error />}
         />
         <Route
           path="/user/railway-services"
-          element={<RailwayServicesPage />}
+          element={
+            <ProtectedRoute>
+              <RailwayServicesPage />
+            </ProtectedRoute>
+          }
           errorElement={<Error />}
         />
         <Route
           path="/user/contacts"
-          element={<ContactPage />}
+          element={
+            <ProtectedRoute>
+              <ContactPage />
+            </ProtectedRoute>
+          }
           errorElement={<Error />}
         />
         <Route
           path="/user/railway-terms"
-          element={<TermssndConditionsPage />}
+          element={
+            <ProtectedRoute>
+              <TermssndConditionsPage />
+            </ProtectedRoute>
+          }
           errorElement={<Error />}
         />
         <Route
           path="/user/about"
-          element={<About />}
+          element={
+            <ProtectedRoute>
+              <About />
+            </ProtectedRoute>
+          }
           errorElement={<Error />}
         />
         <Route
@@ -105,7 +133,11 @@ function App() {
         />
         <Route
           path="/user/train-schedule"
-          element={<TrainScheduleCheckPage />}
+          element={
+            <ProtectedRoute>
+              <TrainScheduleCheckPage />
+            </ProtectedRoute>
+          }
           errorElement={<Error />}
         />
         {/* ///////////////////////////////////////////// */}
@@ -120,51 +152,95 @@ function App() {
         <Route path="/login" element={<Login />} errorElement={<Error />} />
         <Route
           path="/admin/class-detail/:trainid/:routeid"
-          element={<ClassDetailPage />}
+          element={
+            <ProtectedRoute>
+              <ClassDetailPage />
+            </ProtectedRoute>
+          }
         />
         <Route
           exact
           path="/admin/route-detail/:trainid"
-          element={<RouteDetailPage />}
+          element={
+            <ProtectedRoute>
+              <RouteDetailPage />
+            </ProtectedRoute>
+          }
         />
         <Route
           exact
           path="/admin/schedule-detail/:trainid/:routeid"
-          element={<TrainSchedulePage />}
+          element={
+            <ProtectedRoute>
+              <TrainSchedulePage />
+            </ProtectedRoute>
+          }
         />
         <Route
           exact
           path="/admin/pickup-info/:trainid/:routeid"
-          element={<PickupInfoPage />}
+          element={
+            <ProtectedRoute>
+              <PickupInfoPage />
+            </ProtectedRoute>
+          }
         />
         <Route
           exact
           path="/user/check-train-availability"
-          element={<AvailabilityPage />}
+          element={
+            <ProtectedRoute>
+              <AvailabilityPage />
+            </ProtectedRoute>
+          }
         />
         <Route
           exact
           path="/user/select-train-class/:trainid/:routeid"
-          element={<ClassSelectionPage />}
+          element={
+            <ProtectedRoute>
+              <ClassSelectionPage />
+            </ProtectedRoute>
+          }
         />
         <Route
           exact
           path="/user/seat-selection"
-          element={<SeatSelectionPage />}
+          element={
+            <ProtectedRoute>
+              <SeatSelectionPage />
+            </ProtectedRoute>
+          }
         />
         //! below route is under the testing
         <Route
           exact
           path="/user/test-seat-selection1"
-          element={<SeatselectionmodelTestPage1 />}
+          element={
+            <ProtectedRoute>
+              <SeatselectionmodelTestPage1 />
+            </ProtectedRoute>
+          }
         />
         <Route
           exact
           path="/user/test-seat-selection2"
-          element={<SeatselectionmodelTestPage2 />}
+          element={
+            <ProtectedRoute>
+              <SeatselectionmodelTestPage2 />
+            </ProtectedRoute>
+          }
         />
         //! below route is under the testing
-        <Route exact path="/user/payment" element={<Payment />} />
+        <Route
+          exact
+          path="/user/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Route>
     )

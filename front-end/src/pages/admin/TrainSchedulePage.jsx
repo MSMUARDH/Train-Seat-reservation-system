@@ -34,7 +34,15 @@ const TrainSchedulePage = () => {
 
   return (
     <div>
-      <h1>TrainSchedulePage</h1>
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          marginTop: "40px",
+        }}
+      >
+        Train Schedule details
+      </h1>
       <ScheduleForm
         // trainSchedules={trainSchedules}
         trainid={trainid}

@@ -23,16 +23,16 @@ const AllClassDetailTable = ({ classdetails }) => {
       dataIndex: "ClassType",
       width: 30,
     },
-    {
-      title: "Seat Column",
-      dataIndex: "SeatColumn",
-      width: 20,
-    },
-    {
-      title: "Seat Row",
-      dataIndex: "SeatRow",
-      width: 20,
-    },
+    // {
+    //   title: "Seat Column",
+    //   dataIndex: "SeatColumn",
+    //   width: 20,
+    // },
+    // {
+    //   title: "Seat Row",
+    //   dataIndex: "SeatRow",
+    //   width: 20,
+    // },
     {
       title: "Total Seats",
       dataIndex: "TotalSeats",

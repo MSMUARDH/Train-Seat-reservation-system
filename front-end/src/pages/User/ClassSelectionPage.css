@@ -32,11 +32,14 @@
 .class-selection-title {
     font-size: 24px;
     font-weight: 500;
-    display: flex;
+    /* display: flex; */
+
+
 }
 
 .available-seat {
     background-color: rgb(5, 45, 100);
+
     color: white;
     padding: 30px;
     width: 106%;

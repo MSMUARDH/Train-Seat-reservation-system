@@ -14,11 +14,6 @@ const ScheduleTable = ({ trainSchedules }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const columns = [
-    // {
-    //   title: "Route Id",
-    //   dataIndex: "RouteId",
-    //   width: 40,
-    // },
     {
       title: "Date",
       dataIndex: "Date",
@@ -28,17 +23,22 @@ const ScheduleTable = ({ trainSchedules }) => {
     {
       title: "DepatureTime",
       dataIndex: "DepatureTime",
-      render: (text, record) => (
-        <p>{record.DepatureTime?.split("T")[1].split(".")[0]}</p>
-      ),
+      // render: (text, record) => (
+      //   <p>
+      //     {record.DepatureTime != ""
+      //       ? record.DepatureTime.split("T")[1].split(".")[0]
+      //       : ""}
+      //   </p>
+      // ),
+
       width: 20,
     },
     {
       title: "ArrivalTime",
       dataIndex: "ArrivalTime",
-      render: (text, record) => (
-        <p>{record.ArrivalTime?.split("T")[1].split(".")[0]}</p>
-      ),
+      // render: (text, record) => (
+      //   <p>{record.ArrivalTime?.split("T")[1].split(".")[0]}</p>
+      // ),
       width: 20,
     },
     {

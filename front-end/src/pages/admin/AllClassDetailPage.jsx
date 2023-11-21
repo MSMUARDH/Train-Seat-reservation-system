@@ -28,21 +28,18 @@ const AllClassDetailPage = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center", marginTop: 10 }}>All Class Detail</h1>
-      {/* <ClassDetailForm trainid={trainid} data={data} /> */}
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          marginTop: "10px",
+        }}
+      >
+        All class detail
+      </h1>
 
       <AllClassDetailForm />
     </div>
   );
 };
 export default AllClassDetailPage;
-
-// import React from 'react'
-
-// const AllClassDetailPage = () => {
-//   return (
-//     <div>AllClassDetailPage</div>
-//   )
-// }
-
-// export default AllClassDetailPage

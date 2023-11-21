@@ -201,15 +201,40 @@ const AvailabilityPage = () => {
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>AvailabilityPage</h1>
-      <StepsBar />
+      <h1
+        style={{
+          marginTop: "70px",
+          color: "black",
+          textAlign: "center",
+          fontSize: "30px",
+          fontWeight: "bold",
+        }}
+      >
+        Train Availability
+      </h1>
+      <StepsBar stepNum={1} />
+
+      <h1 style={{ marginLeft: "320px", fontSize: "25px", fontWeight: "bold" }}>
+        {From} - {To}
+      </h1>
+      <h1
+        style={{
+          marginLeft: "320px",
+          marginTop: "5px",
+          marginBottom: "5px",
+          fontSize: "20px",
+        }}
+      >
+        Date : {date}
+      </h1>
+
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          minHeight: "100vh",
+          // minHeight: "100vh",
         }}
       >
         {data ? (

@@ -7,8 +7,19 @@ export default function About() {
     <div>
       <Navigation selectedPage="about" />
       <div className="container">
-        <p className="heading-about">About us</p>
-        <p className="about-para">
+        <h1
+          style={{
+            marginTop: "10px",
+            color: "black",
+            textAlign: "center",
+            fontSize: "30px",
+            fontWeight: "bold",
+          }}
+        >
+          About us
+        </h1>
+
+        <p style={{ color: "black" }} className="about-para">
           Rail was introduced in Sri Lanka in 1864 to transport coffee from
           plantations in the hill country district of Kandy to the port city of
           Colombo on its way to Europe and the world market. The coffee blight

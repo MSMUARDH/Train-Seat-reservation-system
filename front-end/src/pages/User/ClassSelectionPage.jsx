@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import StepsBar from "../../components/User/StepsBar";
-import { Button, Radio, Space, Tag } from "antd";
+import { Button, Radio, Space, Tag, message } from "antd";
 
 import { Card, Col, Row } from "antd";
 import { useState } from "react";
@@ -15,6 +15,13 @@ import SecoundClassSeatSelection from "../../components/User/SecoundClassSeatSel
 import ThirdClassSeatSelection from "../../components/User/ThirdClassSeatSelection";
 
 const ClassSelectionPage = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const warningMessage = (msg) => {
+    messageApi.open({
+      type: "warning",
+      content: `${msg}`,
+    });
+  };
   const navigate = useNavigate();
   const [seatSelection, setSeatSelection] = useState(null);
 
@@ -105,7 +112,7 @@ const ClassSelectionPage = () => {
 
   return (
     <div>
-      <StepsBar />
+      <StepsBar stepNum={2} />
 
       <Card className="seat-details-card conatiner" title="Seat Details">
         <Row gutter={16}>

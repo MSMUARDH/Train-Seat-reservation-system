@@ -161,7 +161,16 @@ const SecoundClassSeatSelection = ({ open, onClose, Fair }) => {
           <br />
           <br />
 
-          <h2 style={{ color: "maroon", fontWeight: 500 }}>Front</h2>
+          <h2
+            style={{
+              color: "maroon",
+              fontWeight: 500,
+              textAlign: "center",
+              marginBottom: "10px",
+            }}
+          >
+            Front
+          </h2>
 
           <div
             className="seats grid-container "
@@ -177,6 +186,16 @@ const SecoundClassSeatSelection = ({ open, onClose, Fair }) => {
           >
             {renderSeats()}
           </div>
+          <h2
+            style={{
+              color: "maroon",
+              fontWeight: 500,
+              textAlign: "center",
+              marginTop: "10px",
+            }}
+          >
+            Rear
+          </h2>
 
           <div className="selected-seats">
             <p>Selected Seats: {selectedSeats?.join(", ")}</p>
@@ -184,8 +203,6 @@ const SecoundClassSeatSelection = ({ open, onClose, Fair }) => {
               Selected Seat Count: {selectedSeats.length}
             </p>
           </div>
-
-          <h2 style={{ color: "maroon", fontWeight: 500 }}>Rear</h2>
         </div>
       </Modal>
     </>

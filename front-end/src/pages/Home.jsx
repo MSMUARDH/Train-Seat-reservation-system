@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import HomeCarousel from "../components/User/HomeCarousel";
 import "./HomeCSS.css";
+
 import About from "./User/About";
 import { Card, Form, message } from "antd";
 import { Select } from "antd";
@@ -178,18 +179,21 @@ const Home = () => {
   return (
     <>
       <Navigation selectedPage="home" />
-      <HomeCarousel />
+      <HomeCarousel navigate={navigate} />
       {contextHolder}
 
       <div
         className="book-card"
         // style={{ display: "flex", justifyContent: "center" }}
       >
+        <h1
+          style={{ color: "white", textAlign: "center" }}
+          className="sub-heading-text"
+        >
+          Book Your Seat{" "}
+        </h1>
         <Card
-          color="red"
           size="large"
-          title="
-          Book Your Seat "
           bordered={false}
           style={{
             // backgroundColor: "#232D3F",
@@ -340,6 +344,10 @@ const Home = () => {
             </div>
           </Form>
         </Card>
+
+        <div>
+          
+        </div>
       </div>
 
       {/* <About /> */}

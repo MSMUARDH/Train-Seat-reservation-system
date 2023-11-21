@@ -39,6 +39,9 @@ const PickupInfoTable = (props) => {
     {
       title: "Time",
       dataIndex: "Time",
+      render: (text, record) => (
+        <p>{record.Time?.split("T")[1].split(".")[0]}</p>
+      ),
       width: 20,
     },
     {

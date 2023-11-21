@@ -117,9 +117,9 @@ const UserProfile = () => {
       //* use below userid to test
       // 654b43522f3020a526b6f42c  or user
       const response = await axios.get(
-        `http://localhost:5000/api/user/get-booked-tickets-by-userid/${user}`
+        `http://localhost:5000/api/user/get-booked-tickets-by-userid/${user.id}`
       );
-      console.log("TTTT BOOKING DD", response.data.bookingDetails);
+      // console.log("TTTT BOOKING DD", response.data.bookingDetails);
       setBookedDetails(response.data.bookingDetails);
     } catch (error) {
       console.log(
